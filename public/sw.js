@@ -16,7 +16,7 @@
  *
  * Incrémente VERSION à chaque déploiement (fait automatiquement avec la liste).
  */
-const VERSION = 'v19a104cb1b';
+const VERSION = 'vda5f63ad85';
 const APP_CACHE = `app-${VERSION}`;
 // Changer SDK_VERSION ici ET dans firebase.js / index.html lors d'une montée de version du SDK.
 const SDK_VERSION = '12.19.0';
@@ -58,6 +58,7 @@ const APP_SHELL = [
   '/js/lib/image.js',
   '/js/lib/schedule.js',
   '/js/lib/schema.js',
+  '/js/lib/stats.js',
   '/js/store.js',
   '/js/ui/ambient.js',
   '/js/ui/avatar.js',
@@ -70,6 +71,7 @@ const APP_SHELL = [
   '/js/ui/install.js',
   '/js/ui/layout.js',
   '/js/ui/logo.js',
+  '/js/ui/motion.js',
   '/js/ui/sheet.js',
   '/js/ui/splash.js',
   '/js/ui/tabbar.js',
@@ -96,6 +98,7 @@ const APP_SHELL = [
   '/js/views/share.js',
   '/js/views/training.js',
   '/js/views/weight.js',
+  '/js/views/workout-mode.js',
 ];
 
 const CDN_HOSTS = ['www.gstatic.com'];

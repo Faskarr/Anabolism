@@ -434,7 +434,7 @@ let migratedPid = null;
 
 export function ProtocolView() {
   const days0 = activeProfileId(CAT) ? profileData(CAT).days || [] : [];
-  const header = PageHeader({
+  const header = PageHeader({ back: { href: '#/me', label: 'Moi' },
     eyebrow: 'Planning', title: 'Mon protocole',
     trailing: entriesOf(days0).length
       ? h('button', { class: 'head-action', type: 'button', onclick: () => calendarSheet(days0), 'aria-label': 'Synchroniser le calendrier et les rappels' },

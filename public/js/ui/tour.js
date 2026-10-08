@@ -29,22 +29,21 @@ function slides() {
     {
       icon: 'home', eyebrow: 'Accueil', title: 'Ta journée en un coup d’œil',
       points: [
-        'La séance du jour, à cocher une fois faite.',
-        'Tes amis entraînés aujourd’hui et leurs sons conseillés.',
-        'Tes prochaines prises et tes habitudes. Le bouton en haut à droite réorganise les widgets.',
-        'Le drapeau en haut à droite change la langue de l’app (français / anglais).',
+        'La séance du jour en grand : « Démarrer » lance le mode séance.',
+        'Ta semaine en un regard : séances, volume, séries et records.',
+        'Tes prochaines prises, tes habitudes et tes amis. Le bouton en haut à droite réorganise l’accueil.',
       ],
     },
     {
       icon: 'dumbbell', eyebrow: 'Séances', title: 'Programme & charges',
       points: [
-        'Tes séances par jour, avec séries, répétitions et repos.',
-        '« Charges » : note chaque série, l’app te suggère la suivante et suit ton 1RM.',
-        'Minuteur de repos, supersets et vidéo de technique pour chaque exercice.',
+        'Mode séance : une série à la fois, poids et répétitions en grand, repos lancé tout seul.',
+        'Touche un exercice pour son carnet : charge suggérée, 1RM et historique.',
+        'Supersets, minuteur de repos circulaire et vidéo de technique.',
       ],
     },
     {
-      icon: 'leaf', eyebrow: 'Diet', title: 'Ta nutrition',
+      icon: 'leaf', eyebrow: 'Nutrition', title: 'Ta nutrition',
       points: [
         'Tes repas, aliments, calories et macros de la journée.',
         'Les compléments à prendre avec chaque repas.',
@@ -68,7 +67,7 @@ function slides() {
       ],
     },
     {
-      icon: 'message', eyebrow: 'Contact', title: 'Coach & amis',
+      icon: 'message', eyebrow: 'Social', title: 'Coach & amis',
       points: [
         'Écris directement à ton coach.',
         'Ajoute tes amis avec ton code ami.',
@@ -78,9 +77,9 @@ function slides() {
     {
       icon: 'user', eyebrow: 'Moi', title: 'Ton compte',
       points: [
-        'Ta photo de profil (recadrable) et le suivi de ton poids.',
-        'Import / export de tes données.',
-        'Thème clair ou sombre, fond animé et liens utiles.',
+        'Protocole, habitudes et poids réunis en tuiles.',
+        'Ta photo de profil, l’import / export de tes données.',
+        'Langue, thème clair ou sombre et liens utiles.',
       ],
     },
   ];

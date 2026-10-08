@@ -42,7 +42,7 @@ import { langReady } from './lib/i18n.js';
 await langReady;
 
 // Version des fichiers statiques (à incrémenter à chaque déploiement visuel).
-export const ASSET_VERSION = '0.9.1';
+export const ASSET_VERSION = '2.0.0';
 
 /**
  * Garde-fou : si un ancien index.html (mis en cache par iOS) est servi avec le

@@ -10,9 +10,10 @@ import { undoToast } from './toast.js';
 
 import { T } from '../lib/i18n.js';
 /** En-tête de page « grand titre » façon iOS. */
-export function PageHeader({ eyebrow, title, trailing }) {
+export function PageHeader({ eyebrow, title, trailing, back }) {
   return h('header', { class: 'page-head' },
     h('div', {},
+      back ? h('a', { class: 'back-link', href: back.href }, icon('back', 18), back.label) : null,
       eyebrow ? h('p', { class: 'eyebrow' }, eyebrow) : null,
       h('h1', { class: 'page-title' }, title)),
     trailing || null);

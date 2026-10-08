@@ -258,7 +258,7 @@ export function MessagesHubView(session) {
   if (hubTab === 'chats') {
     const posts = friends.length ? recentPosts(30, 40) : [];
     return [
-      PageHeader({ eyebrow: 'Messagerie', title: 'Mes messages' }),
+      PageHeader({ eyebrow: 'Messagerie & amis', title: 'Social' }),
       tabs,
       friends.length ? [
         SectionTitle('Records & sons', h('button', { class: 'link-btn', type: 'button', onclick: shareMusicFlow }, icon('music', 16), 'Partager un son')),
@@ -279,7 +279,7 @@ export function MessagesHubView(session) {
   }
 
   return [
-    PageHeader({ eyebrow: 'Messagerie', title: 'Mes messages' }),
+    PageHeader({ eyebrow: 'Messagerie & amis', title: 'Social' }),
     tabs,
     incoming.length ? [
       SectionTitle(T`Demandes d’ami (${incoming.length})`),

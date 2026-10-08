@@ -21,7 +21,7 @@ import { openSheet } from '../ui/sheet.js';
 
 import { T, getLang, setLang } from '../lib/i18n.js';
 import { Flag } from '../ui/flag.js';
-export const APP_VERSION = '0.9.1';
+export const APP_VERSION = '2.0.0';
 
 function Row({ href, onclick, iconName, label, value, badge, danger }) {
   const inner = [
@@ -150,7 +150,7 @@ function Hub(s) {
     tile('#/protocol', 'pill', 'Protocole', products ? String(products) : '—', products ? T`produit${products > 1 ? 's' : ''}` : 'À créer'),
     tile('#/goals', 'target', 'Habitudes', daily.length ? `${doneDaily}/${daily.length}` : '—', daily.length ? 'aujourd’hui' : 'À créer'),
     tile('#/me/weight', 'scale', 'Poids', s ? frNum(s.last.kg) : '—', s ? 'kg' : 'Première pesée'),
-    tile(`#/me/share`, 'share', 'Partage', '↔', 'Import / Export'));
+    tile('#/me/share', 'share', 'Partage', null, 'Import / Export'));
 }
 
 export function MeView(session) {

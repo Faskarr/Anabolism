@@ -120,7 +120,7 @@ export function GoalsView() {
   const items = goals.items || [];
   const add = (period) => editGoal(null, apply, period);
   return [
-    PageHeader({ eyebrow: 'Objectifs', title: 'Mes habitudes' }),
+    PageHeader({ back: { href: '#/me', label: 'Moi' }, eyebrow: 'Objectifs', title: 'Mes habitudes' }),
     items.length
       ? GoalsBoard({ goals, onToggle: (it) => toggleGoal(it), onEdit: (it) => editGoal(it, apply), onAdd: add })
       : Empty({ iconName: 'target', title: 'Aucun objectif', text: 'Ajoute des habitudes à cocher chaque jour, chaque semaine ou chaque mois.', actionLabel: 'Ajouter un objectif', onAction: () => add('day') }),

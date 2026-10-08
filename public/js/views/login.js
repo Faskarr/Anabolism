@@ -66,9 +66,10 @@ export function LoginView() {
   return h('main', { class: 'screen' },
     LangButton({ cls: 'login__lang' }),   // avant connexion : un ami anglophone peut basculer tout de suite
     h('div', { class: 'center-stack' },
-      h('div', {},
+      h('div', { class: 'login-hero' },
+        h('span', { class: 'login-hero__icon' }, h('img', { src: '/icons/icon-192.png', alt: '', width: 96, height: 96 })),
+        h('h1', { class: 'login-hero__logo' }, LiveLogo({ size: 'hero' })),
         h('p', { class: 'eyebrow' }, 'Entraînement · Nutrition · Protocole'),
-        h('h1', { style: { marginTop: '12px' } }, LiveLogo({ size: 'hero' })),
       ),
       h('div', {},
         button,

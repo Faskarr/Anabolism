@@ -1859,3 +1859,18 @@ html.wo-open .timer, html.wo-open .tabbar { display: none; }
 .install__title { font-family: var(--font-ui); text-transform: none; font-weight: 700; font-size: 19px; letter-spacing: -.02em; }
 .install__title .brand { font-family: var(--font-display); text-transform: uppercase; font-size: 21px; }
 .wo__go-rest { display: inline-flex; align-items: center; gap: 3px; margin-left: 4px; padding: 3px 9px; border-radius: var(--r-pill); background: rgba(255,255,255,.16); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ═══ Connexion ═════════════════════════════════════════════════ */
+.login-hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--s3); }
+.login-hero__icon { width: 96px; height: 96px; border-radius: 26px; overflow: hidden; box-shadow: 0 0 0 .5px rgba(0,0,0,.08), 0 20px 50px -14px var(--accent-glow); margin-bottom: var(--s3); animation: trophy-in 900ms var(--ease-spring) both; }
+.login-hero__icon img { width: 100%; height: 100%; }
+.login-hero__logo .brand--hero { font-size: clamp(54px, 17vw, 72px); }
+.login-hero .eyebrow { letter-spacing: .12em; }
+.screen .center-stack .btn--ghost { min-height: 56px; }
+.back-link { display: inline-flex; align-items: center; gap: 2px; margin: 0 0 var(--s3) -6px; min-height: 32px; padding: 0 10px 0 4px; border-radius: var(--r-pill); color: var(--bordeaux); text-decoration: none; font-size: 15px; font-weight: 600; }
+.back-link:active { background: var(--accent-a08); }
+
+/* Panneaux : verre plus dense pour une lecture parfaite par-dessus le contenu */
+.sheet { background: color-mix(in srgb, var(--card) 93%, transparent); }
+.log .stat__value { font-size: 21px; }
+.log .stat { padding: var(--s3) 6px; }

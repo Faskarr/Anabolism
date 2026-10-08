@@ -15,7 +15,7 @@
   transform-style: preserve-3d; will-change: transform, opacity;
   animation: splash-rock .42s cubic-bezier(.45,.05,.35,1) both;
 }
-.splash__os { color: #6E1F2C; font-size: 1.32em; line-height: 0; }
+.splash__os { color: #6E1F2C; }
 .splash__line { width: 64px; height: 3px; border-radius: 2px; background: #E2E0DB; overflow: hidden; }
 .splash__line span {
   display: block; height: 100%; width: 100%; background: #6E1F2C;
