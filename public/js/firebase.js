@@ -22,12 +22,12 @@ export * as fs from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firesto
 /**
  * ⚠️ Anabolism utilise son PROPRE projet Firebase — jamais celui d'AnabolicOS
  * (anabolic-adc6a), pour ne toucher ni à l'app en ligne ni à ses données.
- * Colle ici la configuration de l'app web du nouveau projet :
- * Console Firebase › ⚙️ Paramètres du projet › Vos applications › </> Web.
+ * Configuration de l'app web du projet « anabolism »
+ * (Console Firebase › ⚙️ Paramètres du projet › Vos applications › </> Web).
  */
-const PROJECT_ID = 'A_CONFIGURER';           // ex. 'anabolism-1a2b3'
+const PROJECT_ID = 'anabolism';
 const firebaseConfig = {
-  apiKey: 'A_CONFIGURER',
+  apiKey: 'AIzaSyD8CZHM3visB4V1k-MItWs-H6X9lTco8eI',
   // Domaine de connexion = domaine de l'app (web.app) : la page Google et son iframe
   // sont alors sur le MÊME site que l'app. Safari (iPhone) bloque les échanges entre
   // sites différents → 2 touchers nécessaires et connexion lente avec firebaseapp.com.
@@ -38,8 +38,8 @@ const firebaseConfig = {
     : `${PROJECT_ID}.firebaseapp.com`,
   projectId: PROJECT_ID,
   storageBucket: `${PROJECT_ID}.firebasestorage.app`,
-  messagingSenderId: 'A_CONFIGURER',
-  appId: 'A_CONFIGURER',
+  messagingSenderId: '932605906157',
+  appId: '1:932605906157:web:ef2376e58011d3c65f90e4',
 };
 
 export const app = initializeApp(firebaseConfig);
