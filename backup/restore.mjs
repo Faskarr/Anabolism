@@ -12,7 +12,7 @@
  * • --user <UID> : uniquement ce compte (users/UID/…, activity/UID/…, shared/UID,
  *   avatars/UID, conversations/UID/…) — idéal après un bug sur un seul compte.
  * • <fichier> : chemin complet, ou simplement son nom (ex. 2026-10-07_2240.json.gz).
- *   Les fichiers créés depuis l'app (anabolicos-….json.gz) se restaurent pareil :
+ *   Les fichiers créés depuis l'app (anabolism-….json.gz) se restaurent pareil :
  *   copie-les depuis Fichiers (iCloud Drive) dans backup/sauvegardes.
  */
 import { readFileSync, readdirSync, existsSync } from 'node:fs';

@@ -59,7 +59,7 @@ function pruneAutoDays(d) {
 
 function remindersOf(days) {
   return days.flatMap((day) => (day.injections || []).map((it) => ({
-    id: it.id, pid: it.pid, title: it.name, note: [it.type, 'AnabolicOS · protocole'].filter(Boolean).join(' — '),
+    id: it.id, pid: it.pid, title: it.name, note: [it.type, 'Anabolism · protocole'].filter(Boolean).join(' — '),
     weekdays: effectiveWeekdays(day).length ? effectiveWeekdays(day) : ALL_DAYS,
     minutes: itemMinutes(it, day),
   })));
@@ -72,7 +72,7 @@ async function calendarSheet(days, only = null, productId = null) {
   if (productId && list.length) only = { name: list[0].title };
   if (!list.length) { toast('Ajoute d’abord un produit.', { type: 'error' }); return; }
   const ics = buildICS(list);
-  const name = only ? `anabolicos-${only.name.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-').slice(0, 30)}.ics` : 'anabolicos-rappels.ics';
+  const name = only ? `anabolism-${only.name.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-').slice(0, 30)}.ics` : 'anabolism-rappels.ics';
   openSheet({
     title: only ? T`Rappel · ${only.name}` : 'Rappels dans Calendrier',
     subtitle: T`${list.length} rappel${list.length > 1 ? 's' : ''} récurrent${list.length > 1 ? 's' : ''}, avec alerte à l’heure de prise.`,
@@ -90,9 +90,9 @@ async function calendarSheet(days, only = null, productId = null) {
         }, icon('share', 18), 'Partager le fichier')),
       h('div', { class: 'cal-help' },
         h('p', { class: 'cal-help__title' }, 'Ajouter'),
-        h('p', {}, 'Touche « Ajouter au Calendrier », puis « Tout ajouter ». Conseil : choisis un calendrier dédié « AnabolicOS » (à créer dans l’app Calendrier › Calendriers › Ajouter).'),
+        h('p', {}, 'Touche « Ajouter au Calendrier », puis « Tout ajouter ». Conseil : choisis un calendrier dédié « Anabolism » (à créer dans l’app Calendrier › Calendriers › Ajouter).'),
         h('p', { class: 'cal-help__title' }, 'Modifier ou supprimer'),
-        h('p', {}, 'Calendrier › touche un rappel › Supprimer l’événement › « Supprimer tous les événements futurs ». Pour tout retirer d’un coup : supprime le calendrier « AnabolicOS ».'),
+        h('p', {}, 'Calendrier › touche un rappel › Supprimer l’événement › « Supprimer tous les événements futurs ». Pour tout retirer d’un coup : supprime le calendrier « Anabolism ».'),
         h('p', { class: 'muted small' }, 'Après une modification du protocole, supprime les anciens rappels avant de ré-ajouter, sinon ils seront en double.'))),
   });
 }

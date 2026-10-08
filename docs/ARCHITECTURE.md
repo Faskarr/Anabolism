@@ -1,4 +1,4 @@
-# AnabolicOS — Audit, architecture cible et plan de refonte
+# Anabolism — Audit, architecture cible et plan de refonte
 
 > Étapes 1 à 3 du cahier des charges. **Aucune ligne de code n'a été modifiée.**
 > Source analysée : `Ancien/index.html` (2 327 lignes, ~113 Ko) + `Ancien/manifest.json`.
@@ -153,7 +153,7 @@ users/{uid}/
 ### 4.1 Arborescence du nouveau dépôt
 
 ```
-anabolicos/
+anabolism/
 ├── firebase.json              # config Hosting + Firestore
 ├── .firebaserc                # id du projet Firebase
 ├── firestore.rules            # règles de sécurité VERSIONNÉES

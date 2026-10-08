@@ -1,5 +1,5 @@
 /**
- * SAUVEGARDE COMPLÈTE de la base Firestore d'AnabolicOS.
+ * SAUVEGARDE COMPLÈTE de la base Firestore d'Anabolism.
  *
  *   node backup.mjs            → backup/sauvegardes/AAAA-MM-JJ_HHMM.json.gz
  *

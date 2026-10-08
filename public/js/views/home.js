@@ -4,10 +4,13 @@
  *   · prochain repas + macros · poids.
  */
 import { h } from '../lib/dom.js';
-import { greeting, formatShortDate, frNum, formatWeekdays } from '../lib/dates.js';
+import { greeting, formatShortDate, frNum, formatWeekdays, isoWeekday, dayLetters, daysBetween, localISODate } from '../lib/dates.js';
 import { nextMeal, nextProtocolItems, formatMinutes } from '../lib/schedule.js';
-import { state, activeProfileId, profileData, sessionWeekKey, sessionCount, unreadCount } from '../store.js';
+import { state, activeProfileId, profileData, sessionWeekKey, sessionCount, unreadCount, ensureExlogs } from '../store.js';
 import { LiveLogo } from '../ui/logo.js';
+import { countUp, Ring } from '../ui/motion.js';
+import { weekLoad, weeklySeries, personalRecords, doneWeekdays, formatVolume } from '../lib/stats.js';
+import { startWorkout } from './workout-mode.js';
 import { Skeleton } from '../ui/layout.js';
 import { icon } from '../ui/icons.js';
 import { selectSession, nextSession, setSessionDone } from './training.js';
@@ -29,8 +32,7 @@ import { updateHome } from '../data/repo.js';
 import { openSheet } from '../ui/sheet.js';
 import { undoToast } from '../ui/toast.js';
 
-import { T, tx } from '../lib/i18n.js';
-import { LangButton } from '../ui/flag.js';
+import { T, tx, num } from '../lib/i18n.js';
 function Widget({ eyebrow, action, children, tone, cls = '' }) {
   return h('section', { class: `card widget${tone ? ` widget--${tone}` : ''} ${cls}` },
     h('div', { class: 'card__row' }, h('p', { class: 'eyebrow' }, eyebrow), action || null),
@@ -84,12 +86,11 @@ function MessagesButton(session) {
   n = unreadCount();   // même total que la pastille de l'onglet Contact
   if (n === 1 && friendUnread.length === 1) href = `#/friends/${encodeURIComponent(friendUnread[0].id)}`;
   return h('a', {
-    class: `msg-btn${n ? ' msg-btn--unread' : ''}`, href,
+    class: `icon-btn icon-btn--glass home-msg${n ? ' home-msg--unread' : ''}`, href,
     'aria-label': n ? T`${n} message${n > 1 ? 's' : ''} non lu${n > 1 ? 's' : ''}` : 'Messages',
   },
-  icon('message', 22),
-  n ? h('span', { class: 'msg-btn__badge' }, n > 9 ? '9+' : String(n)) : null,
-  h('span', { class: 'msg-btn__label' }, n ? (n > 1 ? 'Nouveaux' : 'Nouveau') : 'Messages'));
+  icon('message', 21),
+  n ? h('span', { class: 'tab__badge' }, n > 9 ? '9+' : String(n)) : null);
 }
 
 // ── Amis entraînés aujourd'hui ──────────────────────────────────────────
@@ -147,38 +148,137 @@ function FriendsWidget(session) {
   });
 }
 
-// ── Séance du jour : la prochaine séance à faire ────────────────────────
+// ── Séance du jour : grand bloc « encre » éclairé par l'accent ────────
+
+/** Frise de la semaine : séance faite (pleine), prévue (anneau), aujourd'hui (repère). */
+function WeekStrip(pid, sessions) {
+  const done = doneWeekdays(pid);
+  const planned = new Set(sessions.flatMap((s) => s.weekdays || []));
+  const today = isoWeekday();
+  return h('div', { class: 'week-strip', role: 'img', 'aria-label': T`${done.size} séance${done.size > 1 ? 's' : ''} faite${done.size > 1 ? 's' : ''} cette semaine` },
+    dayLetters().map((l, i) => {
+      const d = i + 1;
+      return h('span', { class: `week-strip__day${done.has(d) ? ' is-done' : ''}${planned.has(d) ? ' is-planned' : ''}${d === today ? ' is-today' : ''}` },
+        h('span', { class: 'week-strip__dot' }), h('span', { class: 'week-strip__l' }, l));
+    }));
+}
 
 function TodaySession() {
   const { session, plannedToday, sessions, doneToday, pid } = nextSession();
   if (!sessions?.length) {
-    return Widget({ eyebrow: 'Séance du jour', cls: 'widget--compact', tone: 'ink', action: link('Créer', '#/training'), children: [
-      h('p', { class: 'today-session__meta' }, 'Aucun programme pour le moment.')] });
+    return h('section', { class: 'hero hero--empty' },
+      h('span', { class: 'hero__glow', 'aria-hidden': 'true' }),
+      h('p', { class: 'eyebrow' }, 'Séance du jour'),
+      h('h2', { class: 'hero__title hero__title--sm' }, 'Ton programme commence ici'),
+      h('p', { class: 'hero__meta' }, 'Crée tes séances : l’accueil te proposera chaque jour la bonne.'),
+      h('div', { class: 'hero__actions' }, h('a', { class: 'btn btn--primary', href: '#/training' }, icon('plus', 18), 'Créer mon programme')));
   }
   if (!session) {
-    return Widget({ eyebrow: 'Séances de la semaine', cls: 'widget--compact', tone: 'ink', action: link('Programme', '#/training'), children: [
-      h('p', { class: 'today-session__name today-session__name--sm' }, 'Semaine bouclée ✓'),
-      h('p', { class: 'today-session__meta' }, T`${sessions.length}/${sessions.length} séances faites. Repos bien mérité.`)] });
+    return h('section', { class: 'hero' },
+      h('span', { class: 'hero__glow', 'aria-hidden': 'true' }),
+      h('p', { class: 'eyebrow' }, 'Semaine bouclée'),
+      h('h2', { class: 'hero__title' }, T`${sessions.length}/${sessions.length}`),
+      h('p', { class: 'hero__meta' }, 'Toutes tes séances sont faites. Repos bien mérité.'),
+      WeekStrip(pid, sessions));
   }
-  const n = (session.exercises || []).length;
-  return Widget({
-    eyebrow: doneToday.length ? T`${doneToday.map((x) => x.name).join(', ')} faite · ensuite` : plannedToday ? 'Séance du jour' : 'Prochaine séance',
-    cls: 'widget--compact',
-    tone: 'ink',
-    children: h('div', { class: 'today-row' },
-      h('a', { class: 'today-row__main', href: '#/training', onclick: () => selectSession(session.id) },
-        h('span', { class: 'today-session__name' }, session.name),
-        h('span', { class: 'today-session__meta' }, T`${n} exercice${n > 1 ? 's' : ''}${session.weekdays?.length ? T` · ${formatWeekdays(session.weekdays)}` : ''}`)),
+  const exercises = session.exercises || [];
+  const n = exercises.length;
+  const totalSets = exercises.reduce((a, e) => a + (Number(String(e.s).match(/^\s*(\d+)\s*[x×*]/i)?.[1]) || 3), 0);
+  const eyebrow = doneToday.length ? T`${doneToday.map((x) => x.name).join(', ')} faite · ensuite`
+    : plannedToday ? T`Séance du jour · ${formatShortDate(new Date(), { weekday: 'long' })}` : 'Prochaine séance';
+  return h('section', { class: 'hero' },
+    h('span', { class: 'hero__glow', 'aria-hidden': 'true' }),
+    h('div', { class: 'hero__head' },
+      h('p', { class: 'eyebrow' }, eyebrow),
+      h('a', { class: 'hero__open', href: '#/training', 'aria-label': T`Ouvrir ${session.name}`, onclick: () => selectSession(session.id) }, icon('chevron', 20))),
+    h('h2', { class: 'hero__title' }, session.name),
+    h('p', { class: 'hero__meta' },
+      T`${n} exercice${n > 1 ? 's' : ''} · ${totalSets} séries${session.weekdays?.length ? T` · ${formatWeekdays(session.weekdays)}` : ''}`),
+    n ? h('ol', { class: 'hero__list' }, exercises.slice(0, 3).map((e) => h('li', {}, h('span', {}, e.n), h('span', { class: 'hero__sets' }, e.s !== '—' ? e.s : ''))),
+      n > 3 ? h('li', { class: 'hero__more' }, T`+ ${n - 3} autre${n - 3 > 1 ? 's' : ''}`) : null) : null,
+    h('div', { class: 'hero__actions' },
+      h('button', { class: 'btn btn--primary hero__start', type: 'button', disabled: !n, onclick: () => startWorkout(pid, session) },
+        icon('play', 16), 'Démarrer'),
       h('button', {
-        class: 'today-row__check', type: 'button', 'aria-label': T`Marquer ${session.name} comme faite`,
+        class: 'hero__check', type: 'button', 'aria-label': T`Marquer ${session.name} comme faite`,
         onclick: (e) => {
           e.currentTarget.disabled = true;
           setSessionDone(pid, session, true);
           undoToast(T`${session.name} terminée 💪`, () => setSessionDone(pid, session, false));
         },
-      }, icon('check', 22)),
-      h('a', { class: 'today-session__go', href: '#/training', 'aria-label': T`Ouvrir ${session.name}`, onclick: () => selectSession(session.id) }, icon('chevron', 22))),
-  });
+      }, icon('check', 22))),
+    WeekStrip(pid, sessions));
+}
+
+// ── Progression : semaine en cours + évolution sur 8 semaines ───────────
+
+function ProgressWidget() {
+  const pid = activeProfileId('workout');
+  const sessions = pid ? profileData('workout', pid).sessions || [] : [];
+  const doneN = sessions.filter((s) => state.week[sessionWeekKey(pid, s.id)]?.done).length;
+  const total = sessions.length;
+  const cur = weekLoad(0);
+  const prev = weekLoad(-1);
+  const series = weeklySeries(8);
+  const maxV = Math.max(1, ...series.map((x) => x.volume));
+  const vol = formatVolume(cur.volume, num);
+  const delta = prev.volume > 0 ? Math.round(((cur.volume - prev.volume) / prev.volume) * 100) : null;
+
+  return h('section', { class: 'card prog' },
+    h('div', { class: 'card__row' },
+      h('p', { class: 'eyebrow' }, 'Cette semaine'),
+      h('a', { class: 'link-btn', href: '#/training' }, T`${sessionCount()} séances au total`, icon('chevron', 16))),
+    h('div', { class: 'prog__top' },
+      Ring({
+        key: 'home:ring', ratio: total ? doneN / total : 0, size: 128, stroke: 11,
+        children: [
+          h('span', { class: 'ring__value' }, countUp('home:done', doneN), h('span', { class: 'ring__of' }, `/${total}`)),
+          h('span', { class: 'ring__label' }, 'séances'),
+        ],
+      }),
+      h('div', { class: 'prog__stats' },
+        h('div', { class: 'metric' },
+          h('span', { class: 'metric__label' }, 'Volume total'),
+          h('span', { class: 'metric__value' },
+            countUp('home:vol', vol.unit === 't' ? cur.volume / 1000 : cur.volume, (x) => (vol.unit === 't' ? num(x, cur.volume >= 10000 ? 1 : 2) : String(Math.round(x)))),
+            h('span', { class: 'metric__unit' }, vol.unit)),
+          delta != null ? h('span', { class: `metric__delta${delta >= 0 ? ' is-up' : ' is-down'}` },
+            icon(delta >= 0 ? 'up' : 'down', 13), T`${delta >= 0 ? '+' : ''}${delta} % vs sem. dernière`) : h('span', { class: 'metric__delta' }, 'Charge × répétitions')),
+        h('div', { class: 'metric' },
+          h('span', { class: 'metric__label' }, 'Séries complétées'),
+          h('span', { class: 'metric__value' }, countUp('home:sets', cur.sets)),
+          h('span', { class: 'metric__delta' }, T`${prev.sets} la semaine dernière`)))),
+    h('div', { class: 'bars', role: 'img', 'aria-label': 'Volume des 8 dernières semaines' },
+      series.map((x, i) => h('div', { class: `bars__col${x.offset === 0 ? ' is-now' : ''}` },
+        h('span', { class: 'bars__bar', style: { height: `${Math.max(4, (x.volume / maxV) * 100)}%`, animationDelay: `${120 + i * 45}ms` } }),
+        h('span', { class: 'bars__l' }, x.offset === 0 ? tx('Auj.') : T`S${x.offset}`)))),
+    h('p', { class: 'prog__foot' }, 'Volume par semaine'));
+}
+
+// ── Records personnels ──────────────────────────────────────────────────
+
+function RecordsWidget() {
+  const { recent, list } = personalRecords(3);
+  if (!list.length) {
+    return h('section', { class: 'card prs' },
+      h('p', { class: 'eyebrow' }, 'Records personnels'),
+      h('p', { class: 'muted', style: { marginTop: '8px' } }, 'Note tes charges pendant tes séances : tes records apparaîtront ici.'));
+  }
+  const today = localISODate();
+  const ago = (d) => { const n = daysBetween(d, today); return n <= 0 ? tx('Aujourd’hui') : n === 1 ? tx('Hier') : T`Il y a ${n} j`; };
+  return h('section', { class: 'card prs' },
+    h('div', { class: 'card__row' },
+      h('p', { class: 'eyebrow' }, recent ? 'Nouveaux records' : 'Meilleures perfs'),
+      h('button', { class: 'link-btn', type: 'button', onclick: sharePRFlow }, icon('share', 15), 'Partager')),
+    h('ul', { class: 'prs__list' }, list.map((x, i) => h('li', { class: 'pr' },
+      h('span', { class: 'pr__rank' }, String(i + 1)),
+      h('span', { class: 'pr__body' },
+        h('span', { class: 'pr__name' }, x.name),
+        h('span', { class: 'pr__meta' }, recent ? T`${ago(x.d)} · +${num(x.gain, 1)} kg en 1RM` : T`1RM estimé ${num(x.e1rm, 0)} kg`)),
+      h('span', { class: 'pr__value' },
+        countUp(`home:pr:${x.eid}`, x.w, (v) => num(v, x.w % 1 ? 1 : 0)),
+        h('span', { class: 'pr__unit' }, 'kg'),
+        h('span', { class: 'pr__reps' }, `× ${x.r}`))))));
 }
 
 // ── Protocole : 2 prochaines prises ─────────────────────────────────────
@@ -293,13 +393,15 @@ function GoalsWidget() {
 
 export const WIDGETS = {
   session:  { label: 'Séance du jour',        icon: 'dumbbell', render: () => TodaySession() },
+  progress: { label: 'Progression',           icon: 'chart',    render: () => ProgressWidget() },
+  records:  { label: 'Records personnels',    icon: 'flame',    render: () => RecordsWidget() },
   goals:    { label: 'Objectifs & habitudes', icon: 'target',   render: () => GoalsWidget() },
   friends:  { label: 'Amis, records & sons',  icon: 'user',     render: (s) => FriendsWidget(s) },
   protocol: { label: 'Prochaines prises',     icon: 'pill',     render: () => ProtocolWidget() },
   diet:     { label: 'Prochain repas',        icon: 'leaf',     render: () => DietWidget() },
   weight:   { label: 'Poids',                 icon: 'scale',    render: () => WeightWidget() },
 };
-const DEFAULT_ORDER = ['session', 'friends', 'protocol', 'goals', 'diet', 'weight'];
+const DEFAULT_ORDER = ['session', 'progress', 'records', 'protocol', 'goals', 'friends', 'diet', 'weight'];
 /** Masqués tant que l'accueil n'a pas été personnalisé (pour tenir sur un écran). */
 const DEFAULT_HIDDEN = ['diet', 'weight'];
 
@@ -349,34 +451,19 @@ function customize() {
   openSheet({ title: 'Personnaliser l’accueil', subtitle: 'Déplace, masque ou ajoute des widgets. Synchronisé sur tous tes appareils.', body: list });
 }
 
-/** Raccourci partenaire HSN (lien affilié), ouvert dans Safari. */
-const HSN_URL = 'https://www.hsnstore.fr/affiliate/click/index?linkid=Y2F0ZWdvcnl8fDN8fEpGQVNLQXx8aHR0cHM6Ly93d3cuaHNuc3RvcmUuZnIvbnV0cml0aW9uLXNwb3J0aXZl';
-function HsnButton() {
-  return h('a', { class: 'hsn-btn', href: HSN_URL, target: '_blank', rel: 'noopener noreferrer sponsored', 'aria-label': 'HSN, nutrition sportive' },
-    h('span', { class: 'hsn-btn__logo' }, 'HSN'),
-    h('span', { class: 'hsn-btn__label' }, 'Nutrition'));
-}
-
 export function HomeView(session) {
+  ensureExlogs();   // volume, séries et records viennent du carnet de charges
   const first = (session.user.displayName || '').split(' ')[0];
   const head = h('header', { class: 'home-head' },
-    h('div', { class: 'topbar topbar--home' },
+    h('div', { class: 'home-top' },
       LiveLogo(),
-      // Barre d'outils compacte : compteur · langue · personnaliser (tient sur un iPhone 375 px).
-      h('div', { class: 'home-tools' },
-        h('a', { class: 'home-tools__count', href: '#/training', 'aria-label': 'Séances effectuées' },
-          h('span', { class: 'home-tools__value' }, String(sessionCount())), h('span', { class: 'home-tools__label' }, 'séances')),
-        LangButton({ cls: 'home-tools__btn' }),
-        h('button', { class: 'home-tools__btn', type: 'button', 'aria-label': 'Personnaliser l’accueil', onclick: customize }, icon('layout', 20)))),
-    h('div', { class: 'home-hello' },
-      h('div', { style: { minWidth: 0 } },
-        h('p', { class: 'eyebrow' }, T`${tx(greeting())} · ${formatShortDate(new Date(), { weekday: 'long', day: 'numeric', month: 'long' })}`),
-        h('h1', { class: 'page-title' }, first || 'Athlète')),
-      h('div', { class: 'home-hello__actions' },
-        HsnButton(),
-        state.ready ? MessagesButton(session) : null)));
+      h('div', { class: 'home-top__actions' },
+        state.ready ? MessagesButton(session) : null,
+        h('button', { class: 'icon-btn icon-btn--glass', type: 'button', 'aria-label': 'Personnaliser l’accueil', onclick: customize }, icon('layout', 20)))),
+    h('p', { class: 'eyebrow' }, formatShortDate(new Date(), { weekday: 'long', day: 'numeric', month: 'long' })),
+    h('h1', { class: 'page-title home-title' }, T`${tx(greeting())}, `, h('span', { class: 'home-title__name' }, first || tx('Athlète'))));
 
-  if (!state.ready) return [head, Skeleton(5)];
+  if (!state.ready) return [head, Skeleton(4)];
   const { visible } = layout();
   return [
     head,

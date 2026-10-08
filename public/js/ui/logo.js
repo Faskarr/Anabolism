@@ -1,5 +1,5 @@
 /**
- * Logo « ANABOLICOS » animé en continu : la même oscillation 3D que l'animation
+ * Logo « ANABOLISM » animé en continu : la même oscillation 3D que l'animation
  * d'ouverture, rejouée en boucle toutes les 4 secondes.
  *
  * Les vues sont re-rendues à chaque mise à jour temps réel : pour que
@@ -13,7 +13,7 @@ const t0 = performance.now();
 
 export function LiveLogo({ size = 'sm' } = {}) {
   const phase = (performance.now() - t0) % PERIOD_MS;
-  return h('span', { class: `brand brand--${size} brand--live`, 'aria-label': 'AnabolicOS' },
+  return h('span', { class: `brand brand--${size} brand--live`, 'aria-label': 'Anabolism' },
     h('span', { class: 'brand__inner', style: { animationDelay: `-${Math.round(phase)}ms` } },
-      'Anabolic', h('span', { class: 'brand__accent' }, 'OS')));
+      'Anabol', h('span', { class: 'brand__accent' }, 'ism')));
 }

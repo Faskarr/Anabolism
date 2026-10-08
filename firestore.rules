@@ -1,7 +1,7 @@
 rules_version = '2';
 
 // ═══════════════════════════════════════════════════════════════════════
-//  AnabolicOS — règles de sécurité Firestore
+//  Anabolism — règles de sécurité Firestore
 //
 //  Principes :
 //   • Chaque utilisateur ne voit et ne modifie QUE ses propres données.

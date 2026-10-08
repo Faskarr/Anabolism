@@ -250,7 +250,7 @@ async function sendFlow(user, cat) {
       actions: [
         ...librarySources(cat).map((x) => ({ label: T`Bibliothèque · ${x.name}`, icon: 'book', onClick: () => resolve({ name: x.name, payload: x.payload }) })),
         ...mine.map((p) => ({ label: p.name, icon: 'file', onClick: () => resolve({ name: p.name, payload: profileData(cat, p.id) }) })),
-        { label: 'Coller un code AnabolicOS…', icon: 'copy', onClick: async () => {
+        { label: 'Coller un code Anabolism…', icon: 'copy', onClick: async () => {
           const r = await formSheet({
             title: 'Coller un code', fields: [{ name: 'code', label: 'Code JSON', type: 'textarea', maxlength: 900000, required: true }],
             submitLabel: 'Analyser',

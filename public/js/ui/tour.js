@@ -87,7 +87,7 @@ function slides() {
   if (!standalone()) {
     list.push({
       icon: 'phone', eyebrow: 'Astuce', title: 'Installe l’app',
-      text: 'Dans Safari : bouton Partager, puis « Sur l’écran d’accueil ». AnabolicOS s’ouvre alors en plein écran, plus vite, même sans réseau.',
+      text: 'Dans Safari : bouton Partager, puis « Sur l’écran d’accueil ». Anabolism s’ouvre alors en plein écran, plus vite, même sans réseau.',
     });
   }
   return list;
@@ -121,7 +121,7 @@ export function showTour(uid) {
   const next = h('button', { class: 'btn btn--primary tour__next', type: 'button', onclick: () => (index >= list.length - 1 ? close() : go(index + 1)) }, 'Suivant');
   const skip = h('button', { class: 'link-btn tour__skip', type: 'button', onclick: () => close() }, 'Passer');
 
-  const panel = h('div', { class: 'tour__panel', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Découvrir AnabolicOS' },
+  const panel = h('div', { class: 'tour__panel', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Découvrir Anabolism' },
     track,
     h('div', { class: 'tour__foot' },
       skip,

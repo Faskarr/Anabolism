@@ -82,7 +82,7 @@ export async function exportDatabase(onProgress = () => {}) {
     version: 1, project: app.options?.projectId || 'anabolic-adc6a', createdAt: new Date().toISOString(), source: 'app', counts: { docs: count }, docs,
   });
   const gz = await gzip(payload);
-  const name = `anabolicos-${stamp()}.json${gz ? '.gz' : ''}`;
+  const name = `anabolism-${stamp()}.json${gz ? '.gz' : ''}`;
   const file = gz
     ? new File([gz], name, { type: 'application/gzip' })
     : new File([payload], name, { type: 'application/json' });

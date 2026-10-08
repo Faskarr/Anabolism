@@ -57,7 +57,7 @@ export function InstallCard({ compact = false, force = false } = {}) {
       isIOSNonSafari() ? step('!', 'Ouvre cette page dans ', h('strong', {}, 'Safari'), ' (obligatoire sur iPhone).') : null,
       step(1, 'Touche ', h('span', { class: 'install__key' }, icon('share', 15), 'Partager'), ' dans la barre de Safari.'),
       step(2, 'Fais défiler et choisis ', h('strong', {}, 'Sur l’écran d’accueil'), '.'),
-      step(3, 'Touche ', h('strong', {}, 'Ajouter'), ' : AnabolicOS s’ouvre en plein écran, comme une app.'));
+      step(3, 'Touche ', h('strong', {}, 'Ajouter'), ' : Anabolism s’ouvre en plein écran, comme une app.'));
   } else {
     body = h('ol', { class: 'install__steps' },
       step(1, 'Ouvre le menu du navigateur (⋮ ou ⋯).'),
@@ -68,7 +68,7 @@ export function InstallCard({ compact = false, force = false } = {}) {
     h('div', { class: 'install__head' },
       h('span', { class: 'install__icon' }, icon('phone', 22)),
       h('div', {},
-        h('p', { class: 'install__title' }, 'Installe ', h('span', { class: 'brand' }, 'Anabolic', h('span', { class: 'brand__accent' }, 'OS'))),
+        h('p', { class: 'install__title' }, 'Installe ', h('span', { class: 'brand' }, 'Anabol', h('span', { class: 'brand__accent' }, 'ism'))),
         h('p', { class: 'muted small' }, 'Plein écran, ouverture instantanée et pastille de messages non lus.'))),
     body,
     compact ? null : h('button', { class: 'link-btn install__later', type: 'button', onclick: () => hideFor(1) }, 'Plus tard (demain)'));

@@ -1,5 +1,5 @@
 /**
- * Format d'échange AnabolicOS (import / export / envois admin).
+ * Format d'échange Anabolism (import / export / envois admin).
  *
  * v3 (ancienne app) : { v:'3', at, workouts?, diet?, protocol?, weights?, counterBase?, exlogs? }
  *                      → un seul profil par catégorie.
@@ -157,7 +157,7 @@ export function parseImport(text) {
   if (raw.length > MAX_CHARS) throw new Error('Fichier trop volumineux.');
 
   let data;
-  try { data = JSON.parse(raw); } catch { throw new Error("Ce n'est pas un code AnabolicOS valide (JSON illisible)."); }
+  try { data = JSON.parse(raw); } catch { throw new Error("Ce n'est pas un code Anabolism valide (JSON illisible)."); }
   if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('Format non reconnu.');
 
   const bundle = { name: str(data.name, 60) || null };
@@ -201,7 +201,7 @@ export function parseImport(text) {
     if (n) summary.push(T`Carnet de charges · ${n} entrée(s)`);
   }
 
-  if (!summary.length) throw new Error('Aucune donnée AnabolicOS trouvée dans ce code.');
+  if (!summary.length) throw new Error('Aucune donnée Anabolism trouvée dans ce code.');
   return { bundle, summary };
 }
 
@@ -212,7 +212,7 @@ export function parseImport(text) {
  * @param {object} [opts.all]  sauvegarde complète
  */
 export function buildExport({ profiles = [], all, weights, counterBase, exlogs, goals }) {
-  const out = { v: FORMAT_VERSION, at: new Date().toISOString(), app: 'AnabolicOS' };
+  const out = { v: FORMAT_VERSION, at: new Date().toISOString(), app: 'Anabolism' };
   if (profiles.length === 1) out.name = profiles[0].name;
   for (const p of profiles) out[V3_KEY[p.cat]] = p.data;
   if (all) out.all = all;

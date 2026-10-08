@@ -1,5 +1,5 @@
 /**
- * Service worker AnabolicOS — démarrage instantané.
+ * Service worker Anabolism — démarrage instantané.
  *
  * Stratégies :
  *  • Fichiers de l'app (même origine) : CACHE D'ABORD. Chaque version (VERSION)

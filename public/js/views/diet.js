@@ -279,7 +279,7 @@ export function DietView() {
   const header = PageHeader({
     eyebrow: 'Alimentation', title: 'Ma nutrition',
     trailing: h('a', { class: 'head-action', href: '#/diet/calc', 'aria-label': 'Calculer ma diet' },
-      icon('calc', 20), h('span', {}, 'Calculer', h('br'), 'ma diet')),
+      icon('calc', 18), h('span', {}, 'Calculer')),
   });
   if (!state.ready) return [header, Skeleton(4)];
   if (!activeProfileId(CAT)) return [header, NoProfile(CAT, 'leaf')];
@@ -297,5 +297,17 @@ export function DietView() {
       : Empty({ iconName: 'leaf', title: 'Aucun repas', text: 'Ajoute tes repas puis leurs aliments.' }),
     h('button', { class: 'btn btn--ghost btn--block add-btn', type: 'button', onclick: () => editMeal(null) },
       icon('plus', 18), 'Ajouter un repas'),
+    HsnLink(),
   ];
+}
+
+/** Raccourci partenaire HSN (lien affilié), ouvert dans Safari. */
+const HSN_URL = 'https://www.hsnstore.fr/affiliate/click/index?linkid=Y2F0ZWdvcnl8fDN8fEpGQVNLQXx8aHR0cHM6Ly93d3cuaHNuc3RvcmUuZnIvbnV0cml0aW9uLXNwb3J0aXZl';
+function HsnLink() {
+  return h('a', { class: 'card partner', href: HSN_URL, target: '_blank', rel: 'noopener noreferrer sponsored', 'aria-label': 'HSN, nutrition sportive' },
+    h('span', { class: 'partner__logo' }, 'HSN'),
+    h('span', { class: 'partner__body' },
+      h('span', { class: 'partner__title' }, 'Nutrition sportive'),
+      h('span', { class: 'partner__sub' }, 'Whey, créatine, compléments — partenaire')),
+    icon('external', 16));
 }

@@ -1,4 +1,4 @@
-# AnabolicOS
+# Anabolism
 
 PWA de suivi musculation : entraînement, diet, protocole, poids — avec espace administrateur et messagerie.
 

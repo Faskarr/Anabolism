@@ -1,9 +1,9 @@
-# Sauvegarde AnabolicOS
+# Sauvegarde Anabolism
 
 ## Depuis l'iPhone (le plus simple)
 
 App › Admin › **Sauvegarder la base** › **Enregistrer dans Fichiers**.
-Le fichier `anabolicos-AAAA-MM-JJ_HHMM.json.gz` contient toute la base. La ligne
+Le fichier `anabolism-AAAA-MM-JJ_HHMM.json.gz` contient toute la base. La ligne
 indique la date de la dernière sauvegarde faite depuis l'appareil.
 Pour le restaurer : copie-le depuis Fichiers (iCloud Drive) vers
 `backup/sauvegardes/` sur le PC, puis utilise `restore.mjs` (voir plus bas).
@@ -33,10 +33,10 @@ Double-clic sur `sauvegarder.bat` (ou `node backup.mjs`).
 Dans une invite de commandes :
 
 ```
-schtasks /create /tn "AnabolicOS sauvegarde" /sc weekly /d SUN /st 20:00 /tr "\"C:\Users\Julien\Desktop\Anabolic\backup\sauvegarder.bat\" auto"
+schtasks /create /tn "Anabolism sauvegarde" /sc weekly /d SUN /st 20:00 /tr "\"C:\Users\Julien\Desktop\Anabolic\backup\sauvegarder.bat\" auto"
 ```
 
-Supprimer la tâche : `schtasks /delete /tn "AnabolicOS sauvegarde" /f`
+Supprimer la tâche : `schtasks /delete /tn "Anabolism sauvegarde" /f`
 (Le PC doit être allumé à l'heure prévue.)
 
 ## Restaurer

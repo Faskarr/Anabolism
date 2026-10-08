@@ -12,16 +12,18 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   AnabolicOS — design tokens
-   Identité : blanc cassé, gris minéraux, encre, un seul accent bordeaux.
+   Anabolism 2.0 — design tokens
+   Identité CONSERVÉE : papier chaud, gris minéraux, encre, accent bordeaux
+   (thème sombre : anthracite + violet). Nouveauté : les mêmes couleurs
+   déclinées en matériaux (verre), lumière (halos, reflets) et profondeur.
    Tous les composants consomment UNIQUEMENT ces variables.
    ═══════════════════════════════════════════════════════════════ */
 :root {
-  /* Couleurs */
+  /* ── Couleurs d'identité (inchangées) ───────────────────────── */
   --paper:         #F7F6F3;  /* fond de l'app */
   --card:          #FFFFFF;  /* cartes */
-  --mist:          #EDECE8;  /* fonds secondaires, champs */
-  --line:          #E2E0DB;  /* séparateurs */
+  --mist:          #EFEEEA;  /* fonds secondaires, champs (à peine éclairci) */
+  --line:          #E4E2DD;  /* séparateurs */
   --stone:         #75736E;  /* texte secondaire (≥ 4.5:1 sur --card) */
   --ink:           #151515;  /* texte, chiffres */
   --ink-soft:      #3A3936;
@@ -31,19 +33,48 @@
   --ok:            #2F6B4F;  /* succès (usage parcimonieux) */
   --danger:        #9B2C2C;
 
-  /* Surfaces & états (dérivés — redéfinis par le thème sombre) */
+  /* Accent décliné : version lumineuse (halos, anneaux) et transparences */
+  --accent-hi:     #9A3446;  /* bordeaux éclairé : haut des dégradés */
+  --accent-a08:    rgba(110, 31, 44, .08);
+  --accent-a14:    rgba(110, 31, 44, .14);
+  --accent-a24:    rgba(110, 31, 44, .24);
+  --accent-glow:   rgba(154, 52, 70, .38);
+
+  /* ── Surfaces & états (dérivés — redéfinis par le thème sombre) ─ */
   --ink-surface:   #151515;  /* cartes « encre » (séance du jour, bulles, minuteur) */
   --on-ink:        #F7F6F3;  /* texte sur --ink-surface */
   --accent-on-ink: #E8C3C9;  /* accent lisible sur --ink-surface */
-  --bar-bg:        rgba(247, 246, 243, .86);
-  --overlay:       rgba(21, 21, 21, .32);
+  --bar-bg:        rgba(250, 249, 247, .72);
+  --overlay:       rgba(21, 21, 21, .28);
   --shade:         rgba(21, 21, 21, .08);
   --ok-tint:       #E3EFE8;
   --danger-tint:   #F6E5E5;
   color-scheme: light;
 
-  /* Typographie */
+  /* ── Matériaux ───────────────────────────────────────────────
+     Le verre est réservé aux éléments qui FLOTTENT au-dessus du contenu
+     (barre d'onglets, panneaux, minuteur, en-têtes) : il crée la profondeur.
+     Les cartes restent des surfaces pleines, à peine éclairées. */
+  --glass:          rgba(255, 255, 255, .62);
+  --glass-strong:   rgba(255, 255, 255, .82);
+  --glass-border:   rgba(255, 255, 255, .7);
+  --glass-edge:     rgba(21, 21, 21, .06);   /* liseré extérieur, très fin */
+  --glass-blur:     saturate(180%) blur(22px);
+  --highlight:      inset 0 1px 0 rgba(255, 255, 255, .9);   /* reflet en haut des surfaces */
+  --card-grad:      linear-gradient(180deg, #FFFFFF 0%, #FDFCFA 100%);
+  --hairline:       .5px solid var(--line);
+
+  /* Fond : papier + lumière douce de l'accent en haut de l'écran */
+  --backdrop:
+    radial-gradient(120% 60% at 85% -10%, rgba(110, 31, 44, .07), transparent 60%),
+    radial-gradient(90% 50% at -10% 0%, rgba(117, 115, 110, .07), transparent 60%),
+    var(--paper);
+
+  /* ── Typographie ─────────────────────────────────────────────
+     Texte : police système (SF Pro sur iPhone) → rendu natif.
+     Display : Barlow Condensed → chiffres et titres « performance ». */
   --font-text:    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
+  --font-ui:      -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter Display", "Inter", "Segoe UI", Roboto, sans-serif;
   --font-display: "Barlow Condensed", "SF Pro Display", -apple-system, sans-serif;
 
   --fs-xs:   12px;
@@ -53,27 +84,41 @@
   --fs-xl:   22px;
   --fs-2xl:  32px;
   --fs-hero: 56px;
+  --fs-mega: 88px;   /* poids / reps en séance */
 
   /* Espacements (échelle 4 px) */
   --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px;
-  --s5: 20px; --s6: 24px; --s8: 32px; --s10: 40px;
+  --s5: 20px; --s6: 24px; --s8: 32px; --s10: 40px; --s12: 48px;
 
-  /* Formes */
-  --r-sm: 10px;
-  --r-md: 14px;
-  --r-lg: 20px;
+  /* Formes : rayons plus généreux, continus */
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 30px;
   --r-pill: 999px;
 
-  /* Ombres très douces, en couches */
-  --shadow-card: 0 1px 1px rgba(21,21,21,.03), 0 4px 16px rgba(21,21,21,.04);
-  --shadow-float: 0 2px 4px rgba(21,21,21,.04), 0 12px 32px rgba(21,21,21,.10);
+  /* Ombres diffuses, en couches (profondeur sans dureté) */
+  --shadow-card:
+    0 0 0 .5px rgba(21, 21, 21, .04),
+    0 1px 2px rgba(21, 21, 21, .03),
+    0 8px 24px -6px rgba(21, 21, 21, .07);
+  --shadow-lift:
+    0 0 0 .5px rgba(21, 21, 21, .04),
+    0 2px 6px rgba(21, 21, 21, .04),
+    0 18px 40px -12px rgba(21, 21, 21, .14);
+  --shadow-float:
+    0 0 0 .5px rgba(21, 21, 21, .05),
+    0 4px 12px rgba(21, 21, 21, .05),
+    0 24px 60px -16px rgba(21, 21, 21, .22);
+  --shadow-accent: 0 10px 30px -8px var(--accent-glow), 0 2px 6px rgba(110, 31, 44, .2);
 
-  /* Mouvement */
+  /* Mouvement : ressorts naturels */
   --ease-out:    cubic-bezier(.22, 1, .36, 1);
   --ease-spring: cubic-bezier(.34, 1.36, .64, 1);
-  --t-fast: 140ms;
-  --t-base: 240ms;
-  --t-slow: 380ms;
+  --ease-soft:   cubic-bezier(.32, .72, 0, 1);    /* courbe « iOS sheet » */
+  --t-fast: 160ms;
+  --t-base: 280ms;
+  --t-slow: 460ms;
 
   /* Zones tactiles */
   --tap: 48px;
@@ -88,15 +133,15 @@
 }
 
 /* ═══ Thème sombre ═══════════════════════════════════════════════
-   Gris anthracite + accent VIOLET (le bordeaux devient violet).
+   Anthracite profond + accent VIOLET (le bordeaux devient violet).
    Activé par <html data-theme="dark"> (réglage Moi › Apparence). */
 html[data-theme="dark"] {
-  --paper:         #111113;
-  --card:          #1B1B1F;
-  --mist:          #26262C;
-  --line:          #303037;
+  --paper:         #0E0E11;
+  --card:          #18181D;
+  --mist:          #24242B;
+  --line:          #2E2E36;
   --stone:         #9C9AA6;
-  --ink:           #F1F0F4;
+  --ink:           #F3F2F7;
   --ink-soft:      #CFCDD8;
   --bordeaux:      #8B6CFF;
   --bordeaux-ink:  #7454F0;
@@ -104,16 +149,35 @@ html[data-theme="dark"] {
   --ok:            #4CC38A;
   --danger:        #F06A6A;
 
-  --ink-surface:   #262040;
-  --on-ink:        #F1F0F4;
+  --accent-hi:     #A994FF;
+  --accent-a08:    rgba(139, 108, 255, .08);
+  --accent-a14:    rgba(139, 108, 255, .14);
+  --accent-a24:    rgba(139, 108, 255, .24);
+  --accent-glow:   rgba(139, 108, 255, .45);
+
+  --ink-surface:   #211C3A;
+  --on-ink:        #F3F2F7;
   --accent-on-ink: #C9BCFF;
-  --bar-bg:        rgba(17, 17, 19, .86);
-  --overlay:       rgba(0, 0, 0, .55);
+  --bar-bg:        rgba(22, 22, 27, .66);
+  --overlay:       rgba(0, 0, 0, .5);
   --shade:         rgba(0, 0, 0, .4);
   --ok-tint:       rgba(76, 195, 138, .16);
   --danger-tint:   rgba(240, 106, 106, .16);
 
-  --shadow-card:  0 1px 1px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
-  --shadow-float: 0 2px 4px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.45);
+  --glass:          rgba(30, 30, 37, .55);
+  --glass-strong:   rgba(28, 28, 34, .8);
+  --glass-border:   rgba(255, 255, 255, .09);
+  --glass-edge:     rgba(0, 0, 0, .4);
+  --highlight:      inset 0 1px 0 rgba(255, 255, 255, .06);
+  --card-grad:      linear-gradient(180deg, #1B1B21 0%, #16161B 100%);
+  --backdrop:
+    radial-gradient(120% 60% at 85% -10%, rgba(139, 108, 255, .14), transparent 60%),
+    radial-gradient(90% 50% at -10% 10%, rgba(58, 107, 255, .07), transparent 60%),
+    var(--paper);
+
+  --shadow-card:  0 0 0 .5px rgba(255, 255, 255, .05), 0 8px 24px -8px rgba(0, 0, 0, .5);
+  --shadow-lift:  0 0 0 .5px rgba(255, 255, 255, .06), 0 18px 40px -12px rgba(0, 0, 0, .6);
+  --shadow-float: 0 0 0 .5px rgba(255, 255, 255, .07), 0 24px 60px -12px rgba(0, 0, 0, .7);
+  --shadow-accent: 0 10px 34px -8px var(--accent-glow), 0 2px 8px rgba(0, 0, 0, .4);
   color-scheme: dark;
 }

@@ -1,4 +1,4 @@
-# Déployer AnabolicOS avec GitHub + Firebase Hosting (Windows)
+# Déployer Anabolism avec GitHub + Firebase Hosting (Windows)
 
 Objectif : un workflow en 2 temps, toujours le même.
 
@@ -51,8 +51,8 @@ puis relance la commande.
 
 ## Partie 2 — Créer le projet Firebase (une seule fois)
 
-1. https://console.firebase.google.com → **Ajouter un projet** → nom : `anabolicos` (l'identifiant final sera par ex. `anabolicos-a1b2c` — **note-le**). Google Analytics : désactivé (inutile ici).
-2. **Ajouter une application Web** (icône `</>`) → nom « AnabolicOS » → **ne coche pas** « Configurer Firebase Hosting » (on le fait en ligne de commande) → copie l'objet `firebaseConfig` affiché : il ira dans `public/js/firebase.js`.
+1. https://console.firebase.google.com → **Ajouter un projet** → nom : `anabolism` (l'identifiant final sera par ex. `anabolism-a1b2c` — **note-le**). Google Analytics : désactivé (inutile ici).
+2. **Ajouter une application Web** (icône `</>`) → nom « Anabolism » → **ne coche pas** « Configurer Firebase Hosting » (on le fait en ligne de commande) → copie l'objet `firebaseConfig` affiché : il ira dans `public/js/firebase.js`.
 3. **Authentication** → Commencer → onglet *Sign-in method* → **Google** → Activer → choisis ton e-mail d'assistance → Enregistrer.
    Onglet *Paramètres → Domaines autorisés* : `localhost`, `<projet>.firebaseapp.com` et `<projet>.web.app` sont déjà présents. Rien à ajouter.
 4. **Firestore Database** → Créer une base de données → **mode production** → emplacement **`eur3 (europe-west)`** ou `europe-west9 (Paris)`.
@@ -73,8 +73,8 @@ Sur iPhone en mode PWA, Safari limite les cookies tiers. Utiliser ton domaine d'
 
 ## Partie 3 — Créer le dépôt GitHub (une seule fois)
 
-1. https://github.com/new → nom : `anabolicos` → **Private** (recommandé) → **ne coche rien** (pas de README, pas de .gitignore : on les crée localement) → *Create repository*.
-2. Garde la page ouverte : elle affiche l'URL du dépôt, du type `https://github.com/<ton-pseudo>/anabolicos.git`.
+1. https://github.com/new → nom : `anabolism` → **Private** (recommandé) → **ne coche rien** (pas de README, pas de .gitignore : on les crée localement) → *Create repository*.
+2. Garde la page ouverte : elle affiche l'URL du dépôt, du type `https://github.com/<ton-pseudo>/anabolism.git`.
 
 ---
 
@@ -83,8 +83,8 @@ Sur iPhone en mode PWA, Safari limite les cookies tiers. Utiliser ton domaine d'
 ### 4.1 Créer le dossier du projet
 ```powershell
 cd $HOME\Desktop
-mkdir anabolicos
-cd anabolicos
+mkdir anabolism
+cd anabolism
 ```
 (Je fournirai le contenu complet de ce dossier lors de la phase 1 ; tu pourras aussi le faire avec un simple `index.html` « Hello » pour tester la chaîne dès maintenant.)
 
@@ -99,7 +99,7 @@ Réponses :
 |---|---|
 | Are you ready to proceed? | `Y` |
 | Which features? (Espace pour cocher, Entrée pour valider) | **Firestore** et **Hosting** (pas « App Hosting ») |
-| Project Setup | **Use an existing project** → choisis `anabolicos-xxxxx` |
+| Project Setup | **Use an existing project** → choisis `anabolism-xxxxx` |
 | Firestore rules file | `firestore.rules` (Entrée) |
 | Firestore indexes file | `firestore.indexes.json` (Entrée) |
 | What do you want to use as your public directory? | `public` |
@@ -164,8 +164,8 @@ Thumbs.db
 ```powershell
 git init
 git add .
-git commit -m "Initialisation du projet AnabolicOS"
-git remote add origin https://github.com/<ton-pseudo>/anabolicos.git
+git commit -m "Initialisation du projet Anabolism"
+git remote add origin https://github.com/<ton-pseudo>/anabolism.git
 git push -u origin main
 ```
 Au premier push, une fenêtre de connexion GitHub s'ouvre (Git Credential Manager) → autorise. Ensuite, plus jamais.
@@ -177,7 +177,7 @@ firebase deploy
 ```
 À la fin :
 ```
-Hosting URL: https://anabolicos-xxxxx.web.app
+Hosting URL: https://anabolism-xxxxx.web.app
 ```
 Ouvre cette URL sur ton iPhone dans **Safari** → bouton Partager → **Sur l'écran d'accueil**.
 
@@ -205,7 +205,7 @@ Astuce : dans Chrome, `F12` → icône téléphone (*Toggle device toolbar*) →
 ```powershell
 firebase hosting:channel:deploy test --expires 7d
 ```
-→ te donne une URL temporaire (`https://anabolicos-xxxxx--test-abc123.web.app`) à ouvrir sur l'iPhone. La version de production n'est pas touchée.
+→ te donne une URL temporaire (`https://anabolism-xxxxx--test-abc123.web.app`) à ouvrir sur l'iPhone. La version de production n'est pas touchée.
 Si la connexion Google y échoue : *Authentication → Paramètres → Domaines autorisés* → ajoute ce domaine.
 
 ### 5.3 Publier

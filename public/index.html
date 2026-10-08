@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>AnabolicOS</title>
+  <title>Anabolism</title>
   <meta name="description" content="Entraînement, nutrition et protocole — ton suivi personnel.">
 
   <!-- PWA / iOS -->
@@ -11,7 +11,7 @@
   <meta name="theme-color" content="#F7F6F3">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="AnabolicOS">
+  <meta name="apple-mobile-web-app-title" content="Anabolism">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=19a104cb1b">
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png?v=19a104cb1b">
@@ -95,7 +95,7 @@
 </head>
 <body>
   <div id="splash" role="presentation" aria-hidden="true">
-    <div class="splash__logo">Anabolic<span class="splash__os">OS</span></div>
+    <div class="splash__logo">Anabol<span class="splash__os">ism</span></div>
     <div class="splash__line"><span></span></div>
   </div>
 
@@ -112,7 +112,7 @@
       var en = false; try { en = localStorage.getItem('lang') === 'en'; } catch (e) {}
       var box = document.createElement('div');
       box.style.cssText = 'padding:48px 24px;font-family:-apple-system,system-ui,sans-serif;text-align:center;color:#151515';
-      var t = document.createElement('p'); t.textContent = en ? 'AnabolicOS couldn’t start.' : 'AnabolicOS n’a pas pu démarrer.'; t.style.cssText = 'font-weight:700;font-size:18px;margin-bottom:8px';
+      var t = document.createElement('p'); t.textContent = en ? 'Anabolism couldn’t start.' : 'Anabolism n’a pas pu démarrer.'; t.style.cssText = 'font-weight:700;font-size:18px;margin-bottom:8px';
       var d = document.createElement('p'); d.textContent = en ? 'An update is probably in progress.' : 'Une mise à jour est sans doute en cours.'; d.style.cssText = 'color:#6b6b6b;margin-bottom:20px';
       var b = document.createElement('button'); b.textContent = en ? 'Repair and reload' : 'Réparer et recharger';
       b.style.cssText = 'padding:14px 22px;border:0;border-radius:14px;background:#6E1F2C;color:#fff;font-size:16px;font-weight:600';
@@ -127,7 +127,7 @@
       box.appendChild(t); box.appendChild(d); box.appendChild(b); app.appendChild(box);
     }, 7000);
   </script>
-  <noscript><p style="padding:24px">AnabolicOS nécessite JavaScript.</p></noscript>
+  <noscript><p style="padding:24px">Anabolism nécessite JavaScript.</p></noscript>
   <script type="module" src="/js/app.js?v=19a104cb1b"></script>
 </body>
 </html>

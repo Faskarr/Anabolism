@@ -104,7 +104,7 @@ function buildFoundation(session) {
 
   const view = h('main', { class: 'screen' },
     h('header', { class: 'topbar' },
-      h('span', { class: 'brand brand--sm' }, 'Anabolic', h('span', { class: 'brand__accent' }, 'OS')),
+      h('span', { class: 'brand brand--sm' }, 'Anabol', h('span', { class: 'brand__accent' }, 'ism')),
       Avatar(user),
     ),
     h('section', { class: 'hello' },

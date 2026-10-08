@@ -10,8 +10,8 @@
  * animations » est activé ; désactivable dans Moi › Liens & réglages.
  */
 const KEY = 'fxAmbient';
-const SHOOTERS = 8;
-const DOTS = 14;
+const SHOOTERS = 0;   // 2.0 : plus d'étoiles filantes (effet gadget) — seuls les halos de lumière restent
+const DOTS = 0;
 
 export const ambientEnabled = () => { try { return localStorage.getItem(KEY) !== 'off'; } catch { return true; } };
 /** Activé volontairement dans Moi → affiché même si « Réduire les animations » est actif. */

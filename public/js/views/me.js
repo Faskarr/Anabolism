@@ -3,7 +3,8 @@
  */
 import { h } from '../lib/dom.js';
 import { frNum } from '../lib/dates.js';
-import { state } from '../store.js';
+import { state, activeProfileId, profileData } from '../store.js';
+import { isDone } from '../data/goals.js';
 import { signOut } from '../auth.js';
 import { PageHeader } from '../ui/layout.js';
 import { confirmSheet, formSheet } from '../ui/sheet.js';
@@ -108,7 +109,7 @@ function FxToggle() {
   input.checked = ambientEnabled();
   return h('label', { class: 'theme-row', for: 'fx-cracks', style: { position: 'relative' } },
     h('span', { class: 'menu-row__icon' }, icon('flame', 20)),
-    h('span', { class: 'menu-row__label' }, 'Fond animé', h('span', { class: 'menu-row__sub' }, 'Halos flous et étoiles filantes')),
+    h('span', { class: 'menu-row__label' }, 'Fond animé', h('span', { class: 'menu-row__sub' }, 'Halos de lumière en mouvement')),
     input, h('span', { class: 'switch', 'aria-hidden': 'true' }));
 }
 
@@ -133,12 +134,31 @@ async function editPseudo(session) {
   }
 }
 
+/** Suivi : les sections du quotidien hors onglets, en grandes tuiles. */
+function Hub(s) {
+  const goals = state.goals?.items || [];
+  const daily = goals.filter((g) => g.period === 'day');
+  const doneDaily = daily.filter((g) => isDone(state.goals, g)).length;
+  const ppid = activeProfileId('protocol');
+  const products = ppid ? (profileData('protocol', ppid).products || []).length : 0;
+  const tile = (href, iconName, label, value, sub) => h('a', { class: 'hub__tile press', href },
+    h('span', { class: 'hub__icon' }, icon(iconName, 20)),
+    h('span', { class: 'hub__label' }, label),
+    h('span', { class: 'hub__value' }, value),
+    sub ? h('span', { class: 'hub__sub' }, sub) : null);
+  return h('nav', { class: 'hub', 'aria-label': 'Suivi' },
+    tile('#/protocol', 'pill', 'Protocole', products ? String(products) : '—', products ? T`produit${products > 1 ? 's' : ''}` : 'À créer'),
+    tile('#/goals', 'target', 'Habitudes', daily.length ? `${doneDaily}/${daily.length}` : '—', daily.length ? 'aujourd’hui' : 'À créer'),
+    tile('#/me/weight', 'scale', 'Poids', s ? frNum(s.last.kg) : '—', s ? 'kg' : 'Première pesée'),
+    tile(`#/me/share`, 'share', 'Partage', '↔', 'Import / Export'));
+}
+
 export function MeView(session) {
   const { user, isAdmin } = session;
   const s = weightStats();
 
   return [
-    PageHeader({ eyebrow: 'Compte', title: 'Mon compte' }),
+    PageHeader({ eyebrow: 'Compte', title: 'Moi' }),
     h('section', { class: 'card profile-card' },
       AvatarPicker(user),
       h('div', { style: { minWidth: 0 } },
@@ -147,10 +167,9 @@ export function MeView(session) {
         user.pseudo ? h('p', { class: 'muted small' }, T`Nom Google : ${user.googleName}`) : null,
         h('p', { class: 'muted', style: { overflowWrap: 'anywhere' } }, user.email),
         h('p', { class: 'muted small' }, 'Photo visible par tes amis et ton coach.'))),
+    Hub(s),
     h('nav', { class: 'menu card card--flush', 'aria-label': 'Sections' },
       InstallRow(openSheet),
-      Row({ href: '#/me/weight', iconName: 'scale', label: 'Poids', value: s ? `${frNum(s.last.kg)} kg` : null }),
-      Row({ href: '#/me/share', iconName: 'share', label: 'Import / Export' }),
       Row({ href: `#/u/${encodeURIComponent(user.uid)}`, iconName: 'user', label: 'Mon profil' }),
       Row({ href: '#/me/check', iconName: 'shield', label: 'Diagnostic' }),
       Row({
@@ -178,6 +197,6 @@ export function MeView(session) {
           if (await confirmSheet({ title: 'Se déconnecter ?', confirmLabel: 'Se déconnecter', danger: false })) signOut();
         },
       })),
-    h('p', { class: 'hint center' }, T`AnabolicOS ${APP_VERSION}${state.error ? ' · erreur de synchro' : ''}`),
+    h('p', { class: 'hint center' }, T`Anabolism ${APP_VERSION}${state.error ? ' · erreur de synchro' : ''}`),
   ];
 }

@@ -45,10 +45,10 @@ function exportText() {
 
 function fileName() {
   const date = localISODate();   // date locale (toISOString = UTC, la veille avant 2 h)
-  if (ui.mode === 'all') return `anabolicos-sauvegarde-${date}.json`;
+  if (ui.mode === 'all') return `anabolism-sauvegarde-${date}.json`;
   const prof = state.profiles[ui.cat].list.find((p) => p.id === (ui.pid || activeProfileId(ui.cat)));
   const slug = (prof?.name || ui.cat).toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  return `anabolicos-${slug || ui.cat}.json`;
+  return `anabolism-${slug || ui.cat}.json`;
 }
 
 async function doCopy() {
@@ -67,8 +67,8 @@ async function doShare() {
   if (!text) return (ui.mode === 'all' ? null : toast('Aucun profil à exporter.', { type: 'error' }));
   const file = new File([text], fileName(), { type: 'application/json' });
   try {
-    if (navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file], title: 'AnabolicOS' });
-    else if (navigator.share) await navigator.share({ title: 'AnabolicOS', text });
+    if (navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file], title: 'Anabolism' });
+    else if (navigator.share) await navigator.share({ title: 'Anabolism', text });
     else return doDownload();
   } catch (err) {
     if (err?.name !== 'AbortError') toast('Partage impossible.', { type: 'error' });
@@ -226,7 +226,7 @@ function analyse(text) {
 
 function ImportCard() {
   const area = h('textarea', {
-    class: 'input input--code', rows: 5, placeholder: 'Colle ici un code AnabolicOS…',
+    class: 'input input--code', rows: 5, placeholder: 'Colle ici un code Anabolism…',
     'aria-label': 'Code à importer', spellcheck: 'false', autocapitalize: 'off', id: 'imp-text',
     oninput: () => { ui.importText = area.value; },
   });
@@ -309,6 +309,6 @@ export function ShareView() {
     ExportCard(),
     ImportCard(),
     SectionTitle('Compatibilité'),
-    h('p', { class: 'hint' }, "Les codes de l'ancienne version d'AnabolicOS (v3) s'importent directement."),
+    h('p', { class: 'hint' }, "Les codes de l'ancienne version d'Anabolism (v3) s'importent directement."),
   ];
 }

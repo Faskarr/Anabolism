@@ -22,7 +22,8 @@ import { onSession } from './auth.js';
 import { state, startStore, stopStore, subscribe, startAdminFeeds, unreadCount, rollWeekIfNeeded } from './store.js';
 import { Skeleton } from './ui/layout.js';
 import { startSharedPublisher } from './data/shared.js';
-import { TabBar } from './ui/tabbar.js';
+import { renderTabBar } from './ui/tabbar.js';
+import { resetMotion } from './ui/motion.js';
 import { showTimer, stopTimer } from './ui/timer.js';
 import { LoginView } from './views/login.js';
 import { DisabledView } from './views/disabled.js';
@@ -153,7 +154,7 @@ const root = document.getElementById('app');
  * en plein milieu ne coupe pas l'animation, chaque rendu recalcule le délai
  * de chaque bloc par rapport à l'instant de départ (délai négatif = reprise).
  */
-const ENTER = { STEP_MS: 45, DURATION_MS: 420 };
+const ENTER = { STEP_MS: 60, DURATION_MS: 640 };
 let enter = { pending: true, at: 0 };
 
 function applyEnter() {
@@ -258,7 +259,7 @@ function render({ scrollTop = false } = {}) {
     mount(viewEl, h('div', { class: 'card' }, h('p', { class: 'card__title' }, 'Erreur d’affichage'), h('p', { class: 'card__text' }, String(err.message))));
   }
   applyEnter();
-  mount(tabHost, TabBar(current.key, { contact: unreadCount() }));
+  renderTabBar(tabHost, current.key, { contact: unreadCount() });
 
   if (keep) {
     const el = document.getElementById(keep.id);
@@ -277,6 +278,7 @@ window.addEventListener('hashchange', () => {
   if (prev?.leave && (next.key !== current.key || next.param !== current.param)) prev.leave();
   current = next;
   enter = { pending: true, at: 0 };
+  resetMotion();   // chiffres et anneaux se rejouent à l'arrivée sur l'écran
   render({ scrollTop: true });
 });
 window.addEventListener('app:render', scheduleRender);
@@ -369,6 +371,7 @@ window.addEventListener('hashchange', maybeShowTour);
 watchResume(() => {
   ROUTES[current.key]?.leave?.();
   enter = { pending: true, at: 0 };
+  resetMotion();
   if (location.hash !== '#/home') location.hash = '#/home';
   else render({ scrollTop: true }); // déjà sur l'accueil : rejoue l'entrée des widgets
 });
@@ -383,7 +386,7 @@ if ('serviceWorker' in navigator && location.hostname !== 'localhost') {
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (!hadController || reloading) return;          // toute première installation
     if (performance.now() < 8000) { reloading = true; location.reload(); return; }
-    toast('Nouvelle version d’AnabolicOS installée', {
+    toast('Nouvelle version d’Anabolism installée', {
       duration: 20000, action: { label: 'Recharger', onClick: () => location.reload() },
     });
   });

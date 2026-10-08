@@ -109,7 +109,7 @@ async function addFlow(cat) {
       title: T`Nouveau modèle · ${CAT_LABEL[cat]}`,
       actions: [
         ...mine.map((p) => ({ label: T`Depuis « ${p.name} »`, icon: 'file', onClick: () => resolve({ name: p.name, payload: profileData(cat, p.id) }) })),
-        { label: 'Coller un code AnabolicOS…', icon: 'copy', onClick: async () => {
+        { label: 'Coller un code Anabolism…', icon: 'copy', onClick: async () => {
           const r = await formSheet({ title: 'Coller un code', fields: [{ name: 'code', label: 'Code JSON', type: 'textarea', maxlength: 900000, required: true }], submitLabel: 'Analyser' });
           if (!r?.values) return resolve(null);
           try {

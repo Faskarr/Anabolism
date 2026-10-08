@@ -8,7 +8,7 @@
  *  • une série d'événements récurrents par produit (RRULE hebdomadaire) ;
  *  • heure « flottante » (sans fuseau) → toujours l'heure locale du téléphone ;
  *  • une alarme à l'heure exacte (VALARM) ;
- *  • UID stable par produit (anabolicos-<id>) pour repérer les doublons.
+ *  • UID stable par produit (anabolism-<id>) pour repérer les doublons.
  */
 const BYDAY = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 
@@ -50,10 +50,10 @@ function firstOccurrence(weekdays, minutes, now = new Date()) {
  * @param {Array<{ id:string, title:string, note?:string, weekdays:number[], minutes:number }>} reminders
  * @returns {string} contenu .ics
  */
-export function buildICS(reminders, calName = 'AnabolicOS') {
+export function buildICS(reminders, calName = 'Anabolism') {
   const now = new Date();
   const lines = [
-    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//AnabolicOS//Protocole//FR', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Anabolism//Protocole//FR', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
     `X-WR-CALNAME:${esc(calName)}`,
   ];
   for (const r of reminders) {
@@ -81,7 +81,7 @@ export function buildICS(reminders, calName = 'AnabolicOS') {
  * Ouvre le fichier dans iOS : la fiche « Ajouter au calendrier » s'affiche.
  * Repli : partage du fichier (Fichiers, AirDrop, Mail…).
  */
-export async function openICS(content, filename = 'anabolicos-rappels.ics') {
+export async function openICS(content, filename = 'anabolism-rappels.ics') {
   const file = new File([content], filename, { type: 'text/calendar' });
   const url = URL.createObjectURL(file);
   const a = document.createElement('a');
@@ -94,10 +94,10 @@ export async function openICS(content, filename = 'anabolicos-rappels.ics') {
   setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 
-export async function shareICS(content, filename = 'anabolicos-rappels.ics') {
+export async function shareICS(content, filename = 'anabolism-rappels.ics') {
   const file = new File([content], filename, { type: 'text/calendar' });
   if (navigator.canShare?.({ files: [file] })) {
-    await navigator.share({ files: [file], title: 'Rappels AnabolicOS' });
+    await navigator.share({ files: [file], title: 'Rappels Anabolism' });
     return true;
   }
   await openICS(content, filename);

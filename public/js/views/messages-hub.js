@@ -45,9 +45,9 @@ function loadMyCode(session) {
 function retryMyCode() { codeFailed = false; rerender(); }
 
 async function shareCode() {
-  const text = T`Ajoute-moi sur AnabolicOS avec mon code ami : ${myCode}\nhttps://anabolic-adc6a.web.app`;
+  const text = T`Ajoute-moi sur Anabolism avec mon code ami : ${myCode}\nhttps://anabolic-adc6a.web.app`;
   try {
-    if (navigator.share) await navigator.share({ title: 'AnabolicOS', text });
+    if (navigator.share) await navigator.share({ title: 'Anabolism', text });
     else { await navigator.clipboard?.writeText(myCode); toast('Code copié'); }
   } catch (err) { if (err?.name !== 'AbortError') toast('Partage impossible.', { type: 'error' }); }
 }

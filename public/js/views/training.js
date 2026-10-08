@@ -19,6 +19,7 @@ import { undoToast, toast } from '../ui/toast.js';
 import { icon } from '../ui/icons.js';
 import { lineChart } from '../ui/chart.js';
 import { startTimer, parseRest, showTimer } from '../ui/timer.js';
+import { startWorkout, workoutInProgress } from './workout-mode.js';
 
 import { T, isEn } from '../lib/i18n.js';
 const CAT = 'workout';
@@ -142,15 +143,6 @@ const VIDEO = {
   youtube: { label: 'YouTube', url: (q) => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}` },
 };
 
-function VideoButton(kind, name) {
-  const v = VIDEO[kind];
-  return h('a', {
-    class: `pill-btn pill-btn--video pill-btn--${kind}`, href: v.url(name), target: '_blank', rel: 'noopener noreferrer',
-    'aria-label': T`Voir ${name} sur ${v.label} (le nom est copié)`,
-    // Copie le nom : pratique si l'app ouvre sa page d'accueil au lieu de la recherche.
-    onclick: () => { navigator.clipboard?.writeText(name).catch(() => {}); },
-  }, icon('play', 13), v.label);
-}
 
 // ── Séances ─────────────────────────────────────────────────────────────
 
@@ -486,14 +478,16 @@ function ExerciseCard(session, ex, index, total, label, inSuperset = false) {
   const more = () => actionSheet({
     title: ex.n,
     actions: [
+      { label: 'Carnet de charges', icon: 'chart', onClick: () => openLog(ex) },
       { label: 'Modifier', icon: 'edit', onClick: () => editExercise(session, ex) },
+      { label: 'Voir la technique (YouTube)', icon: 'play', onClick: () => { navigator.clipboard?.writeText(ex.n).catch(() => {}); window.open(VIDEO.youtube.url(ex.n), '_blank', 'noopener'); } },
       index > 0 && { label: ex.ss ? 'Délier du précédent (superset)' : 'Lier au précédent (superset)', icon: 'link2', onClick: () => toggleSuperset(session, ex.id) },
       index > 0 && { label: 'Monter', icon: 'up', onClick: () => moveExercise(session, ex.id, -1) },
       index < total - 1 && { label: 'Descendre', icon: 'down', onClick: () => moveExercise(session, ex.id, 1) },
     ],
   });
 
-  const main = h('button', { class: 'exercise__main', type: 'button', 'aria-label': T`Modifier ${ex.n}`, onclick: () => editExercise(session, ex) },
+  const main = h('button', { class: 'exercise__main', type: 'button', 'aria-label': T`Carnet de charges de ${ex.n}`, onclick: () => openLog(ex) },
     h('span', { class: 'exercise__index' }, label || String(index + 1).padStart(2, '0')),
     h('span', { class: 'exercise__body' },
       h('span', { class: 'exercise__name' }, ex.n),
@@ -511,7 +505,7 @@ function ExerciseCard(session, ex, index, total, label, inSuperset = false) {
 
   if (inSuperset) {
     return h('article', { class: 'ss-row' }, main,
-      h('div', { class: 'exercise__actions' }, logBtn, VideoButton('youtube', ex.n),
+      h('div', { class: 'exercise__actions' }, logBtn,
         h('span', { class: 'spacer' }),
         IconButton('more', T`Options de ${ex.n}`, more, 'icon-btn--ghost exercise__more')));
   }
@@ -525,10 +519,7 @@ function ExerciseCard(session, ex, index, total, label, inSuperset = false) {
         onclick: () => (restSec ? startTimer(restSec) : startTimer(120)),
       }, icon('timer', 16), restSec ? ex.r : 'Repos'),
       h('span', { class: 'spacer' }),
-      IconButton('more', T`Options de ${ex.n}`, more, 'icon-btn--ghost exercise__more')),
-    h('div', { class: 'exercise__video' },
-      h('span', { class: 'exercise__video-label' }, 'Technique'),
-      VideoButton('youtube', ex.n)));
+      IconButton('more', T`Options de ${ex.n}`, more, 'icon-btn--ghost exercise__more')));
 }
 
 /** Superset / circuit : UNE seule bulle, UN seul repos après le dernier exercice. */
@@ -569,7 +560,7 @@ export function TrainingView() {
   ensureExlogs();   // carnet de charges chargé à la demande (pas au démarrage)
   const header = PageHeader({
     eyebrow: 'Programme',
-    title: 'Mon entraînement',
+    title: 'Entraînement',
     trailing: h('button', { class: 'counter', type: 'button', onclick: editCounter, 'aria-label': 'Modifier le compteur de séances' },
       h('span', { class: 'counter__value' }, String(sessionCount())),
       h('span', { class: 'counter__label' }, 'séances')),
@@ -607,30 +598,38 @@ export function TrainingView() {
   const doneTs = state.week[weekKey]?.ts;
   const exercises = session.exercises || [];
 
-  const doneCard = h('button', {
-    class: `done-toggle${done ? ' done-toggle--on' : ''}`, type: 'button', 'aria-pressed': String(Boolean(done)),
-    onclick: () => setSessionDone(pid, session, !done),
-  },
-  h('span', { class: 'done-toggle__box' }, icon('check', 18)),
-  h('span', { class: 'done-toggle__text' },
-    h('span', { class: 'done-toggle__title' }, done ? 'Séance terminée' : 'Marquer la séance comme faite'),
-    h('span', { class: 'done-toggle__sub' }, done && doneTs ? formatShortDate(doneTs) : 'Cette semaine')));
+  const resume = workoutInProgress(pid, session.id);
+  const nSets = exercises.reduce((a, e) => a + (parseRepRange(e.s)?.sets || 3), 0);
+  const sessionCard = h('section', { class: `session-card${done ? ' is-done' : ''}` },
+    h('span', { class: 'hero__glow', 'aria-hidden': 'true' }),
+    h('div', { class: 'session-card__head' },
+      h('div', { style: { minWidth: 0 } },
+        h('p', { class: 'eyebrow' }, done ? T`Faite · ${formatShortDate(doneTs || Date.now())}` : 'Séance'),
+        h('h2', { class: 'session-card__name' }, session.name)),
+      IconButton('more', 'Options de la séance', () => actionSheet({
+        title: session.name,
+        actions: [
+          { label: 'Modifier (nom, jours)', icon: 'edit', onClick: () => editSession(session) },
+          { label: 'Supprimer la séance', icon: 'trash', danger: true, onClick: () => deleteSession(session) },
+        ],
+      }), 'icon-btn--ghost session-card__more')),
+    h('p', { class: 'session-card__meta' }, T`${exercises.length} exercice${exercises.length > 1 ? 's' : ''} · ${nSets} séries`),
+    WeekdayPicker(session),
+    h('div', { class: 'session-card__actions' },
+      h('button', { class: 'btn btn--primary session-card__start', type: 'button', disabled: !exercises.length, onclick: () => startWorkout(pid, session) },
+        icon('play', 16), resume ? T`Reprendre · ${resume.done.length} série${resume.done.length > 1 ? 's' : ''} faite${resume.done.length > 1 ? 's' : ''}` : 'Démarrer la séance'),
+      h('button', {
+        class: `session-card__check${done ? ' is-on' : ''}`, type: 'button', 'aria-pressed': String(Boolean(done)),
+        'aria-label': done ? 'Séance faite (toucher pour annuler)' : 'Marquer la séance comme faite',
+        onclick: () => setSessionDone(pid, session, !done),
+      }, icon('check', 22))));
 
   return [
     header,
     ProfileBar(CAT),
     tabs,
-    doneCard,
-    SectionTitle(session.name,
-      h('div', { class: 'row-gap' },
-        IconButton('more', 'Options de la séance', () => actionSheet({
-          title: session.name,
-          actions: [
-            { label: 'Modifier (nom, jours)', icon: 'edit', onClick: () => editSession(session) },
-            { label: 'Supprimer la séance', icon: 'trash', danger: true, onClick: () => deleteSession(session) },
-          ],
-        }), 'icon-btn--soft'))),
-    WeekdayPicker(session),
+    sessionCard,
+    SectionTitle('Exercices'),
     exercises.length
       ? ExerciseList(session, exercises)
       : Empty({ iconName: 'dumbbell', title: 'Aucun exercice', text: 'Ajoute le premier exercice de cette séance.' }),
