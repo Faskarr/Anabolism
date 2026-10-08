@@ -6,6 +6,15 @@ PWA de suivi musculation : entraînement, diet, protocole, poids — avec espace
 - **Stack** : HTML/CSS/JS natifs (modules ES, sans build) · Firebase Auth (Google) · Cloud Firestore · Firebase Hosting
 - **Plan** : Spark (gratuit)
 
+## Design 2.0 (refonte premium)
+
+- **Identité conservée** : papier chaud, encre, accent bordeaux (thème sombre : anthracite + violet) — déclinés en verre, halos et reflets.
+- **Navigation** : capsule de verre flottante à 5 onglets (Aujourd'hui, Séances, Nutrition, Social, Moi). Protocole, Habitudes et Poids sont dans Moi (et sur l'accueil).
+- **Accueil** : séance du jour, progression de la semaine (anneau, volume, séries, 8 semaines), records personnels, puis widgets personnalisables.
+- **Mode séance** (`js/views/workout-mode.js`) : une série à la fois, poids/reps géants, repos circulaire lancé automatiquement.
+- **Mouvement** (`js/ui/motion.js`) : chiffres et anneaux animés qui survivent aux rendus temps réel ; respect de « Réduire les animations ».
+- **Stats** (`js/lib/stats.js`) : volume, séries et records calculés depuis le carnet de charges (aucune nouvelle donnée Firestore).
+
 ## Structure
 
 ```
