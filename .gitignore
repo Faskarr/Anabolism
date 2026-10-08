@@ -1,0 +1,17 @@
+# Dépendances / outils
+node_modules/
+.firebase/
+*.log
+
+# Secrets — ne JAMAIS committer
+.env
+.env.*
+*service-account*.json
+
+# Sauvegardes de la base (données personnelles des utilisateurs)
+backup/sauvegardes/
+
+# Système
+.DS_Store
+Thumbs.db
+desktop.ini

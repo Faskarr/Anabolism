@@ -1,0 +1,119 @@
+/* Polices auto-hébergées (licence SIL OFL — voir /fonts/OFL-BarlowCondensed.txt).
+   Plus de dépendance à Google Fonts : affichage immédiat, fonctionne hors ligne. */
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-style: normal; font-weight: 500; font-display: swap;
+  src: url('/fonts/barlow-condensed-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-style: normal; font-weight: 600; font-display: swap;
+  src: url('/fonts/barlow-condensed-latin-600-normal.woff2') format('woff2');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AnabolicOS — design tokens
+   Identité : blanc cassé, gris minéraux, encre, un seul accent bordeaux.
+   Tous les composants consomment UNIQUEMENT ces variables.
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  /* Couleurs */
+  --paper:         #F7F6F3;  /* fond de l'app */
+  --card:          #FFFFFF;  /* cartes */
+  --mist:          #EDECE8;  /* fonds secondaires, champs */
+  --line:          #E2E0DB;  /* séparateurs */
+  --stone:         #75736E;  /* texte secondaire (≥ 4.5:1 sur --card) */
+  --ink:           #151515;  /* texte, chiffres */
+  --ink-soft:      #3A3936;
+  --bordeaux:      #6E1F2C;  /* accent unique */
+  --bordeaux-ink:  #561722;  /* état pressé */
+  --bordeaux-tint: #F3E9EA;  /* fond des états actifs */
+  --ok:            #2F6B4F;  /* succès (usage parcimonieux) */
+  --danger:        #9B2C2C;
+
+  /* Surfaces & états (dérivés — redéfinis par le thème sombre) */
+  --ink-surface:   #151515;  /* cartes « encre » (séance du jour, bulles, minuteur) */
+  --on-ink:        #F7F6F3;  /* texte sur --ink-surface */
+  --accent-on-ink: #E8C3C9;  /* accent lisible sur --ink-surface */
+  --bar-bg:        rgba(247, 246, 243, .86);
+  --overlay:       rgba(21, 21, 21, .32);
+  --shade:         rgba(21, 21, 21, .08);
+  --ok-tint:       #E3EFE8;
+  --danger-tint:   #F6E5E5;
+  color-scheme: light;
+
+  /* Typographie */
+  --font-text:    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
+  --font-display: "Barlow Condensed", "SF Pro Display", -apple-system, sans-serif;
+
+  --fs-xs:   12px;
+  --fs-sm:   13px;
+  --fs-md:   15px;
+  --fs-lg:   17px;
+  --fs-xl:   22px;
+  --fs-2xl:  32px;
+  --fs-hero: 56px;
+
+  /* Espacements (échelle 4 px) */
+  --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px;
+  --s5: 20px; --s6: 24px; --s8: 32px; --s10: 40px;
+
+  /* Formes */
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+
+  /* Ombres très douces, en couches */
+  --shadow-card: 0 1px 1px rgba(21,21,21,.03), 0 4px 16px rgba(21,21,21,.04);
+  --shadow-float: 0 2px 4px rgba(21,21,21,.04), 0 12px 32px rgba(21,21,21,.10);
+
+  /* Mouvement */
+  --ease-out:    cubic-bezier(.22, 1, .36, 1);
+  --ease-spring: cubic-bezier(.34, 1.36, .64, 1);
+  --t-fast: 140ms;
+  --t-base: 240ms;
+  --t-slow: 380ms;
+
+  /* Zones tactiles */
+  --tap: 48px;
+
+  /* Safe areas iPhone */
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --t-fast: 0ms; --t-base: 0ms; --t-slow: 0ms; }
+}
+
+/* ═══ Thème sombre ═══════════════════════════════════════════════
+   Gris anthracite + accent VIOLET (le bordeaux devient violet).
+   Activé par <html data-theme="dark"> (réglage Moi › Apparence). */
+html[data-theme="dark"] {
+  --paper:         #111113;
+  --card:          #1B1B1F;
+  --mist:          #26262C;
+  --line:          #303037;
+  --stone:         #9C9AA6;
+  --ink:           #F1F0F4;
+  --ink-soft:      #CFCDD8;
+  --bordeaux:      #8B6CFF;
+  --bordeaux-ink:  #7454F0;
+  --bordeaux-tint: rgba(139, 108, 255, .16);
+  --ok:            #4CC38A;
+  --danger:        #F06A6A;
+
+  --ink-surface:   #262040;
+  --on-ink:        #F1F0F4;
+  --accent-on-ink: #C9BCFF;
+  --bar-bg:        rgba(17, 17, 19, .86);
+  --overlay:       rgba(0, 0, 0, .55);
+  --shade:         rgba(0, 0, 0, .4);
+  --ok-tint:       rgba(76, 195, 138, .16);
+  --danger-tint:   rgba(240, 106, 106, .16);
+
+  --shadow-card:  0 1px 1px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+  --shadow-float: 0 2px 4px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.45);
+  color-scheme: dark;
+}

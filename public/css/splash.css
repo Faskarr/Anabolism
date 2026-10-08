@@ -1,0 +1,53 @@
+/* Animation d'ouverture — chargée en premier (avant le JS) par index.html,
+   ou injectée par js/ui/splash.js si un ancien index.html est servi. */
+@font-face { font-family: 'Barlow Condensed'; font-weight: 600; font-display: block;
+  src: url('/fonts/barlow-condensed-latin-600-normal.woff2') format('woff2'); }
+#splash {
+  position: fixed; inset: 0; z-index: 2000;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
+  background: #F7F6F3; perspective: 900px;
+  transition: opacity .3s cubic-bezier(.22,1,.36,1), visibility .3s;
+}
+.splash__logo {
+  font-family: 'Barlow Condensed', -apple-system, sans-serif; font-weight: 600;
+  font-size: clamp(52px, 17vw, 84px); line-height: .9; letter-spacing: .01em;
+  text-transform: uppercase; color: #151515; white-space: nowrap;
+  transform-style: preserve-3d; will-change: transform, opacity;
+  animation: splash-rock .42s cubic-bezier(.45,.05,.35,1) both;
+}
+.splash__os { color: #6E1F2C; font-size: 1.32em; line-height: 0; }
+.splash__line { width: 64px; height: 3px; border-radius: 2px; background: #E2E0DB; overflow: hidden; }
+.splash__line span {
+  display: block; height: 100%; width: 100%; background: #6E1F2C;
+  transform-origin: left; animation: splash-load .34s cubic-bezier(.65,0,.35,1) both;
+}
+/* Oscillation d'avant en arrière, amortie (rotation 3D sur l'axe vertical) */
+@keyframes splash-rock {
+  0%   { opacity: 0; transform: rotateY(-38deg) scale(.9); }
+  18%  { opacity: 1; }
+  30%  { transform: rotateY(24deg) scale(1); }
+  52%  { transform: rotateY(-13deg); }
+  72%  { transform: rotateY(6deg); }
+  88%  { transform: rotateY(-2deg); }
+  100% { opacity: 1; transform: rotateY(0) scale(1); }
+}
+@keyframes splash-load { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+/* Sortie : le logo grossit et s'efface, révélant l'accueil */
+#splash.splash--out { opacity: 0; visibility: hidden; pointer-events: none; }
+#splash.splash--out .splash__logo {
+  animation: none; transform: scale(1.35); opacity: 0;
+  transition: transform .32s cubic-bezier(.22,1,.36,1), opacity .26s ease;
+}
+#splash.splash--out .splash__line { opacity: 0; transition: opacity .2s; }
+@media (prefers-reduced-motion: reduce) {
+  .splash__logo { animation: splash-fade .3s ease both; }
+  #splash.splash--out .splash__logo { transform: none; }
+  @keyframes splash-fade { from { opacity: 0; } }
+}
+
+/* Thème sombre */
+html[data-theme="dark"] #splash { background: #111113; }
+html[data-theme="dark"] .splash__logo { color: #F1F0F4; }
+html[data-theme="dark"] .splash__os, html[data-theme="dark"] .splash__line span { color: #8B6CFF; background-color: transparent; }
+html[data-theme="dark"] .splash__line span { background: #8B6CFF; }
+html[data-theme="dark"] .splash__line { background: #303037; }

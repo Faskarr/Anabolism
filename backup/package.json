@@ -1,0 +1,13 @@
+{
+  "name": "anabolicos-backup",
+  "private": true,
+  "type": "module",
+  "description": "Sauvegarde et restauration de la base Firestore d'AnabolicOS (exécuté sur le PC, jamais déployé).",
+  "scripts": {
+    "backup": "node backup.mjs",
+    "restore": "node restore.mjs"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  }
+}
