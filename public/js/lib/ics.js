@@ -62,7 +62,7 @@ export function buildICS(reminders, calName = 'Anabolism') {
     const end = new Date(start.getTime() + 10 * 60000);
     lines.push(
       'BEGIN:VEVENT',
-      `UID:anabolicos-${r.id}@anabolic-adc6a.web.app`,
+      `UID:anabolism-${r.id}@${location.hostname}`,
       `DTSTAMP:${stamp(now)}`,
       `DTSTART:${local(start)}`,
       `DTEND:${local(end)}`,

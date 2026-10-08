@@ -1211,7 +1211,7 @@ export default {
   "Nom Google : {0}": "Google name: {0}",
   "Tu t’appelles maintenant {0}": "You’re now called {0}",
   "{0} non lu{1}": "{0} unread",
-  "Ajoute-moi sur Anabolism avec mon code ami : {0}\nhttps://anabolic-adc6a.web.app": "Add me on Anabolism with my friend code: {0}\nhttps://anabolic-adc6a.web.app",
+  "Ajoute-moi sur Anabolism avec mon code ami : {0}\n{1}": "Add me on Anabolism with my friend code: {0}\n{1}",
   "Ajouter {0} en ami ?": "Add {0} as a friend?",
   "Code {0}": "Code {0}",
   "Commence la discussion avec {0}.": "Start the conversation with {0}.",

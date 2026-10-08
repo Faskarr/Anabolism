@@ -2,9 +2,16 @@
 
 PWA de suivi musculation : entraînement, diet, protocole, poids — avec espace administrateur et messagerie.
 
-- **Production** : https://anabolic-adc6a.web.app
+- **Production** : projet Firebase **dédié à Anabolism** (à créer) — jamais `anabolic-adc6a`, qui héberge AnabolicOS
 - **Stack** : HTML/CSS/JS natifs (modules ES, sans build) · Firebase Auth (Google) · Cloud Firestore · Firebase Hosting
 - **Plan** : Spark (gratuit)
+
+## Mise en service (nouveau projet Firebase)
+
+1. Console Firebase → **Ajouter un projet** (ex. `anabolism`) → activer **Authentication › Google**, **Firestore** (région eur3) et **Hosting**.
+2. Paramètres du projet → **Vos applications** → `</>` Web → copier la config dans `public/js/firebase.js` (bloc `PROJECT_ID` / `firebaseConfig`).
+3. Remplacer `A_CONFIGURER` par l'identifiant du projet dans `.firebaserc`.
+4. `firebase deploy` (Hosting + règles Firestore). Tant que `A_CONFIGURER` est présent, aucun déploiement n'est possible : impossible d'écraser AnabolicOS par erreur.
 
 ## Design 2.0 (refonte premium)
 
@@ -19,7 +26,7 @@ PWA de suivi musculation : entraînement, diet, protocole, poids — avec espace
 
 ```
 firebase.json            Config Hosting (cache, en-têtes de sécurité) + Firestore
-.firebaserc              Projet Firebase lié (anabolic-adc6a)
+.firebaserc              Projet Firebase lié (celui d'Anabolism)
 firestore.rules          Règles de sécurité — déployées avec `firebase deploy`
 public/
   index.html             App utilisateur

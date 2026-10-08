@@ -19,20 +19,27 @@ import {
 export * as authSdk from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js';
 export * as fs from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
 
+/**
+ * ⚠️ Anabolism utilise son PROPRE projet Firebase — jamais celui d'AnabolicOS
+ * (anabolic-adc6a), pour ne toucher ni à l'app en ligne ni à ses données.
+ * Colle ici la configuration de l'app web du nouveau projet :
+ * Console Firebase › ⚙️ Paramètres du projet › Vos applications › </> Web.
+ */
+const PROJECT_ID = 'A_CONFIGURER';           // ex. 'anabolism-1a2b3'
 const firebaseConfig = {
-  apiKey: 'AIzaSyBje3KcOzf7aeFzL-kvca5D2lv7WDgtIlM',
+  apiKey: 'A_CONFIGURER',
   // Domaine de connexion = domaine de l'app (web.app) : la page Google et son iframe
   // sont alors sur le MÊME site que l'app. Safari (iPhone) bloque les échanges entre
   // sites différents → 2 touchers nécessaires et connexion lente avec firebaseapp.com.
-  // Prérequis (une fois) : https://anabolic-adc6a.web.app/__/auth/handler ajouté aux
+  // Prérequis (une fois) : https://<PROJECT_ID>.web.app/__/auth/handler ajouté aux
   // « URI de redirection autorisés » du client OAuth dans Google Cloud Console.
-  authDomain: /^anabolic-adc6a\.(web\.app|firebaseapp\.com)$/.test(location.hostname)
+  authDomain: location.hostname === `${PROJECT_ID}.web.app` || location.hostname === `${PROJECT_ID}.firebaseapp.com`
     ? location.hostname
-    : 'anabolic-adc6a.firebaseapp.com',
-  projectId: 'anabolic-adc6a',
-  storageBucket: 'anabolic-adc6a.firebasestorage.app',
-  messagingSenderId: '297929048136',
-  appId: '1:297929048136:web:0bba6528cf6525c07bd87d',
+    : `${PROJECT_ID}.firebaseapp.com`,
+  projectId: PROJECT_ID,
+  storageBucket: `${PROJECT_ID}.firebasestorage.app`,
+  messagingSenderId: 'A_CONFIGURER',
+  appId: 'A_CONFIGURER',
 };
 
 export const app = initializeApp(firebaseConfig);
